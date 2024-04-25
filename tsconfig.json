@@ -1,0 +1,25 @@
+{
+    "compilerOptions": {
+        "target": "ES2022",
+        "module": "ES2022",
+        "lib": [
+            "ES2022"
+        ],
+        "strict": true,
+        "noImplicitAny": false,
+        "baseUrl": ".",
+        "typeRoots": [
+            "./types/*",
+        ],
+        "paths": {
+            "@widgets/*": [
+                "./src/widgets/*"
+            ],
+            "@variables": [
+                "./src/variables"
+            ]
+        },
+        "skipLibCheck": true,
+        "moduleResolution": "Node"
+    }
+}

@@ -1,0 +1,31 @@
+.ActiveTitle {
+  font-family: "Lexend", "Readex Pro";
+  font-size: medium;
+  color: rgb(224, 227, 232);
+}
+
+.ActiveClass {
+  font-family: "Lexend", "Readex Pro";
+  font-size: smaller;
+  color: rgb(65, 71, 77);
+}
+
+.ActiveBox {
+  border-radius: 5px;
+  padding: 2px 0.5rem;
+  transition: all 0.2s;
+  min-width: 20rem;
+}
+.ActiveBox.Hover {
+  box-shadow: inset 0 0 0 100px rgba(224, 227, 232, 0.1);
+}
+
+.ActiveWindow {
+  margin: 5px;
+}
+
+.Bar {
+  background-color: rgba(16, 20, 23, 0.6274509804);
+}
+
+/*# sourceMappingURL=.index.css.map */

@@ -1,0 +1,16 @@
+$BgAlpha: #101417A0;
+$Hover: rgba(224, 227, 232, 0.1);
+$Text: rgb(224, 227, 232);
+$TextSub: rgb(65, 71, 77);
+
+@mixin TextMain {
+	font-family: 'Lexend', 'Readex Pro';
+	font-size: medium;
+	color: $Text;
+}
+
+@mixin TextSub {
+	font-family: 'Lexend', 'Readex Pro';
+	font-size: smaller;
+	color: $TextSub;
+}
