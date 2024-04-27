@@ -1,0 +1,28 @@
+extends:
+  - eslint:recommended
+  - plugin:@typescript-eslint/recommended
+
+env:
+  browser: false
+  node: false
+
+parser: "@typescript-eslint/parser"
+plugins:
+  - "@typescript-eslint"
+
+rules:
+  indent:
+    - warn
+    - tab
+    - SwitchCase: 1
+
+  quotes:
+    - warn
+    - single
+
+  semi:
+    - error
+    - always
+
+  no-undef:
+    - off

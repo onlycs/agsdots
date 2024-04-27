@@ -1,0 +1,23 @@
+@import '../prelude';
+
+.WidthBoxes {
+    margin-top: 1.05rem;
+    margin-bottom: 1.05rem;
+}
+
+.WidthBox {
+    background-color: $Text;
+    border-radius: 16px;
+
+    &.Current {
+        margin: 0 0.5rem;
+
+        &.NoMarginLeft {
+            margin-left: 0;
+        }
+
+        &.NoMarginRight {
+            margin-right: 0;
+        }
+    }
+}

@@ -12,6 +12,7 @@ try {
 			'--external', 'resource://*',
 			'--external', 'gi://*',
 			'--external', 'file://*',
+			'--minify',
 		]); break;
 
 		case 'esbuild': await Utils.execAsync([

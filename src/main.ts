@@ -6,7 +6,5 @@ App.resetCss();
 App.applyCss(`${App.configDir}/styles/.index.css`);
 
 App.config({
-    windows: [Bar(0)],
+	windows: [Bar(0)],
 });
-
-App.Inspector();

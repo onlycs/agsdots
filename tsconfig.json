@@ -17,6 +17,9 @@
             ],
             "@variables": [
                 "./src/variables"
+            ],
+            "@prelude": [
+                "./src/prelude"
             ]
         },
         "skipLibCheck": true,
