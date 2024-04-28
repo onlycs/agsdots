@@ -6,11 +6,13 @@
     "@girs/accountsservice-1.0": "^1.0.0-3.2.7",
     "@typescript-eslint/eslint-plugin": ">=7.0.2",
     "@typescript-eslint/parser": ">=7.0.2",
-    "eslint": "8.56.0",
     "typescript": "^5.4.5"
   },
   "scripts": {
-    "lint": "eslint ."
+    "lint": "eslint . --fix"
   },
-  "sourceType": "module"
+  "sourceType": "module",
+  "dependencies": {
+    "eslint": "8.56.0"
+  }
 }

@@ -20,17 +20,12 @@
 }
 
 .WidthBox {
+  transition: all 0.3s cubic-bezier(0.175, 0.875, 0.35, 1.275);
   background-color: rgb(224, 227, 232);
   border-radius: 16px;
 }
 .WidthBox.Current {
   margin: 0 0.5rem;
-}
-.WidthBox.Current.NoMarginLeft {
-  margin-left: 0;
-}
-.WidthBox.Current.NoMarginRight {
-  margin-right: 0;
 }
 
 .Bar {
@@ -49,7 +44,7 @@
   padding: 0.15rem 0.5rem;
 }
 .BarElement.ExtraPadding {
-  padding: 0.15rem 0.75rem;
+  padding: 0.15rem 1rem;
 }
 
 * {

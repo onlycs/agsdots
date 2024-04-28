@@ -6,18 +6,11 @@
 }
 
 .WidthBox {
+    transition: all 0.3s cubic-bezier(0.175, 0.875, 0.35, 1.275);
     background-color: $Text;
     border-radius: 16px;
 
     &.Current {
         margin: 0 0.5rem;
-
-        &.NoMarginLeft {
-            margin-left: 0;
-        }
-
-        &.NoMarginRight {
-            margin-right: 0;
-        }
     }
 }

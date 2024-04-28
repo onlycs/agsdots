@@ -1,41 +1,55 @@
-import {type Binding} from 'types/service';
-import {type ActiveID} from 'types/service/hyprland';
-import {Hoverable} from '@prelude';
+import { type Binding } from 'types/service';
+import { type ActiveID } from 'types/service/hyprland';
+import { Hoverable } from '@prelude';
 
 const Hyprland = await Service.import('hyprland');
 
-const UpTo = (width: number) => Widget.Box({
-	width_request: width * 6,
-	height_request: 4,
-	class_name: 'WidthBox',
-});
+function TransformUpTo(id: number): string {
+	switch (id) {
+		case 0: return 'background-color: transparent';
+		case 9: return 'min-width: 64px;';
+		default: return `min-width: ${id * 6}px;`;
+	}
+}
 
-const Current = (noml: boolean = false, nomr: boolean = false) => Widget.Box({
-	width_request: 18,
-	height_request: 4,
-	class_name: `WidthBox Current ${noml ? 'NoMarginLeft' : ''} ${nomr ? 'NoMarginRight' : ''}`,
-});
+function TransformCurrent(id: number): string {
+	const mixin = ({
+		0: 'margin-left: 0',
+		9: 'margin-right: 0',
+	})[id] || '';
 
-const After = (width: number) => Widget.Box({
-	width_request: width * 6,
-	height_request: 4,
-	class_name: 'WidthBox',
-});
+	return `min-width: 6px; ${mixin}`;
+}
+
+function TransformAfter(id: number): string {
+	switch (id) {
+		case 9: return 'background-color: transparent';
+		case 0: return 'min-width: 64px;';
+		default: return `min-width: ${56 - id * 6}px;`;
+	}
+}
 
 const WidthBoxes = (active: Binding<ActiveID, 'id', number>) => {
 	active = active.transform(id => (id - 1) % 10);
 
 	return Widget.Box({
-		children: active.transform(id => {
-			switch (id) {
-				case 0:
-					return [Current(true), After(9 - id)];
-				case 9:
-					return [UpTo(id), Current(false, true)];
-				default:
-					return [UpTo(id), Current(), After(9 - id)];
-			}
-		}),
+		children: [
+			Widget.Box({
+				height_request: 4,
+				class_name: 'WidthBox',
+				css: active.transform(TransformUpTo),
+			}),
+			Widget.Box({
+				height_request: 4,
+				class_name: 'WidthBox Current',
+				css: active.transform(TransformCurrent),
+			}),
+			Widget.Box({
+				height_request: 4,
+				class_name: 'WidthBox',
+				css: active.transform(TransformAfter),
+			}),
+		],
 		class_name: 'WidthBoxes',
 	});
 };

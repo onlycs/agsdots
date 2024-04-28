@@ -10,11 +10,11 @@ const Bar = (monitor: number) => Widget.Window({
 	child: Widget.CenterBox({
 		start_widget: Widget.Box({
 			children: [ActiveWindow, ActiveWorkspace],
-            spacing: 8,
+			spacing: 8,
 		}),
 		center_widget: Widget.Box({}),
 		end_widget: Widget.Box({}),
-        class_name: 'Bar',
+		class_name: 'Bar',
 	}),
 	height_request: 28,
 });

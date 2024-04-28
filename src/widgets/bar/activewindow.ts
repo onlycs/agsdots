@@ -1,4 +1,4 @@
-import {Hoverable} from '@prelude';
+import { Hoverable } from '@prelude';
 
 const Hyprland = await Service.import('hyprland');
 

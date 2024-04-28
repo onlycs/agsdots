@@ -24,5 +24,19 @@ rules:
     - error
     - always
 
-  no-undef:
-    - off
+  object-curly-spacing:
+    - warn
+    - always
+
+  array-bracket-spacing:
+    - warn
+    - never
+    - objectsInArrays: true
+      arraysInArrays: true
+
+  no-undef: off
+
+  "@typescript-eslint/no-unused-vars":
+    - warn
+    - varsIgnorePattern: "^_"
+      argsIgnorePattern: "^_"

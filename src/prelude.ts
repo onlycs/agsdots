@@ -1,5 +1,5 @@
 import type EventBox from 'types/widgets/eventbox';
-import {type Box} from 'types/widgets/box';
+import { type Box } from 'types/widgets/box';
 import type Gtk from 'types/@girs/gtk-3.0/gtk-3.0';
 
 export function Hoverable<Child extends Gtk.Widget, Attr>(target: Box<Child, Attr>, cssclass = 'Hover') {
