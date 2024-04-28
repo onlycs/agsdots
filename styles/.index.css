@@ -20,7 +20,7 @@
 }
 
 .WidthBox {
-  transition: all 0.3s cubic-bezier(0.175, 0.875, 0.35, 1.275);
+  transition: all 0.3s ease;
   background-color: rgb(224, 227, 232);
   border-radius: 16px;
 }
