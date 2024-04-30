@@ -40,3 +40,5 @@ rules:
     - warn
     - varsIgnorePattern: "^_"
       argsIgnorePattern: "^_"
+
+  "@typescript-eslint/no-explicit-any": "off"

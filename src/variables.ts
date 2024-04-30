@@ -1,7 +1,7 @@
 export const Moment = {
 	Time: Variable('', {
-		poll: [1000, function () {
-			return Utils.exec('date +%l:%M:%S %P').trim();
+		poll: [250, function () {
+			return Utils.exec('date +"%l:%M %p"').trim();
 		}],
 	}),
 	Date: Variable('', {

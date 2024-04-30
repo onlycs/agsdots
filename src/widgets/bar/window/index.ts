@@ -37,13 +37,13 @@ export default Hoverable(Widget.Box({
 	children: [
 		Widget.Label({
 			label: Hyprland.active.client.bind('title').transform(TitleTransformer),
-			class_name: 'ActiveTitle',
+			class_name: 'TextMain',
 			max_width_chars: 10,
 			truncate: 'end',
 		}),
 		Widget.Label({
 			label: Hyprland.active.client.bind('class').transform(ClassTransformer),
-			class_name: 'ActiveClass',
+			class_name: 'TextSub',
 			max_width_chars: 10,
 			truncate: 'end',
 		}),

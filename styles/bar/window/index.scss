@@ -1,13 +1,5 @@
 @import '../prelude';
 
-.ActiveTitle {
-	@include TextMain;
-}
-
-.ActiveClass {
-	@include TextSub;
-}
-
 .ActiveWindow {
 	min-width: 16rem;
 }

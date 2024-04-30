@@ -1,19 +1,23 @@
-$BgAlpha: #101417A0;
+$BgAlpha: #10141760;
 $Hover: rgba(224, 227, 232, 0.1);
 $Text: rgb(224, 227, 232);
 $TextSub: rgb(65, 71, 77);
 $BorderRadius: 0.2rem;
 
-@mixin TextMain {
+.TextMain {
 	font-family: 'Lexend', 'Readex Pro';
 	font-size: medium;
 	color: $Text;
 }
 
-@mixin TextSub {
+.TextSub {
 	font-family: 'Lexend', 'Readex Pro';
 	font-size: smaller;
 	color: $TextSub;
+}
+
+.TextLarge {
+	font-size: 1.2rem;
 }
 
 .HoverBox {

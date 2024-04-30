@@ -1,5 +1,6 @@
 import Window from '@bar/window';
 import Workspace from '@bar/workspace';
+import DateTime from '@bar/datetime';
 
 const Bar = (monitor: number) => Widget.Window({
 	monitor,
@@ -12,7 +13,10 @@ const Bar = (monitor: number) => Widget.Window({
 			children: [Window, Workspace],
 			spacing: 8,
 		}),
-		center_widget: Widget.Box({}),
+		center_widget: Widget.Box({
+			children: [DateTime],
+			spacing: 8,
+		}),
 		end_widget: Widget.Box({}),
 		class_name: 'Bar',
 	}),
