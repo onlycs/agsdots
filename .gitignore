@@ -131,3 +131,4 @@ dist
 
 /types
 /styles/*.css
+*.map

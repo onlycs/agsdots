@@ -15,3 +15,11 @@ $BorderRadius: 0.2rem;
 	font-size: smaller;
 	color: $TextSub;
 }
+
+.HoverBox {
+	border-radius: $BorderRadius;
+
+	&.Hover {
+		background-color: $Hover;
+	}
+}

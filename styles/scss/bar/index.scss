@@ -1,27 +1,8 @@
-@import 'activewindow';
-@import 'activeworkspace';
-@import '../prelude';
+@import 'window';
+@import 'workspace';
+@import 'prelude';
 
 .Bar {
 	background-color: $BgAlpha;
-
 	padding: 0.35rem 0.5rem;
-}
-
-.HoverBox {
-	border-radius: $BorderRadius;
-
-	&.Hover {
-		background-color: $Hover;
-	}
-}
-
-.BarElement {
-	padding: 0.15rem 0.5rem;
-
-	&.ExtraPadding {
-		padding: 0.15rem 1rem;
-	}
-
-	@extend .HoverBox;
 }

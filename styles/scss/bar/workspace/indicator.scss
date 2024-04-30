@@ -1,0 +1,19 @@
+@import '../prelude';
+
+.WorkspaceIndicator {
+    min-width: 4px;
+    min-height: 4px;
+    margin: 4px 0.5rem 7px 0;
+    border-radius: 16px;
+    background-color: transparent;
+
+    border: 1px solid $TextSub;
+
+    &.Windows {
+        background-color: $TextSub;
+    }
+
+    &.Last {
+        margin-right: 0;
+    }
+}

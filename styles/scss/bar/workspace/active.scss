@@ -1,0 +1,14 @@
+@import '../prelude';
+
+.SliderSegment {
+    transition: all 0.1s linear;
+    background-color: $Text;
+    border-radius: 16px;
+    min-height: 6px;
+    margin: 8px 0 3px 0;
+
+    &.Current {
+        margin-right: 0.5rem;
+        margin-left: 0.5rem;
+    }
+}

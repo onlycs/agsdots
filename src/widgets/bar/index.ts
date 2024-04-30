@@ -1,5 +1,5 @@
-import ActiveWindow from '@widgets/bar/activewindow';
-import ActiveWorkspace from '@widgets/bar/activeworkspace';
+import Window from '@bar/window';
+import Workspace from '@bar/workspace';
 
 const Bar = (monitor: number) => Widget.Window({
 	monitor,
@@ -9,7 +9,7 @@ const Bar = (monitor: number) => Widget.Window({
 	class_name: 'Bar',
 	child: Widget.CenterBox({
 		start_widget: Widget.Box({
-			children: [ActiveWindow, ActiveWorkspace],
+			children: [Window, Workspace],
 			spacing: 8,
 		}),
 		center_widget: Widget.Box({}),
