@@ -18,6 +18,9 @@
             "@bar/*": [
                 "./src/widgets/bar/*"
             ],
+            "@services/*": [
+                "./src/services/*"
+            ],
             "@variables": [
                 "./src/variables"
             ],

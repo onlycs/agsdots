@@ -2,8 +2,8 @@ import Window from '@bar/window';
 import Workspace from '@bar/workspace';
 import DateTime from '@bar/datetime';
 
-const Bar = (monitor: number) => Widget.Window({
-	monitor,
+export default Widget.Window({
+	monitor: 0,
 	name: 'bar',
 	anchor: ['top', 'left', 'right'],
 	exclusivity: 'exclusive',
@@ -22,5 +22,3 @@ const Bar = (monitor: number) => Widget.Window({
 	}),
 	height_request: 28,
 });
-
-export default Bar;

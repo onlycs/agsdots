@@ -1,7 +1,6 @@
 import { Hoverable } from '@prelude';
 
 const Hyprland = await Service.import('hyprland');
-
 const ClassTitleOverrides: Record<string, (title: string) => string> = {
 	'kitty': title => title + ' - Terminal',
 	'code-url-handler': title => title.replace('Visual Studio Code', 'VSCode'),

@@ -1,11 +1,12 @@
 import type EventBox from 'types/widgets/eventbox';
 import { type Box } from 'types/widgets/box';
 import type Gtk from 'types/@girs/gtk-3.0/gtk-3.0';
+import { EventBoxProps } from 'types/widgets/eventbox';
 
 type EBox<Child extends Gtk.Widget> = EventBox<NBox<Child>, unknown>;
 type NBox<Child extends Gtk.Widget> = Box<Child, unknown>;
 
-export function Hoverable<Child extends Gtk.Widget>(target: NBox<Child>, props: { [key: string]: any } = {}) {
+export function Hoverable<Child extends Gtk.Widget>(target: NBox<Child>, props: EventBoxProps<Gtk.Widget> = {}) {
 	return Widget.EventBox({
 		...props,
 		child: target,

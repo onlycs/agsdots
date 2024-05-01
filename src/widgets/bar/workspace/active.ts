@@ -40,19 +40,16 @@ const SliderBox = (active: Binding<ActiveID, 'id', number>) => {
 	return Widget.Box({
 		children: [
 			Widget.Box({
-				class_name: 'SliderSegment Before',
+				class_name: 'SliderSegment',
 				css: active.transform(TransformBefore),
 			}),
 			Widget.Box({
 				class_name: 'SliderSegment Current',
 				css: active.transform(TransformCurrent),
 			}),
-			Widget.Fixed({
-				child: Widget.Box({
-					class_name: 'SliderSegment After',
-					css: active.transform(TransformAfter),
-				}),
-				hexpand: false,
+			Widget.Box({
+				class_name: 'SliderSegment',
+				css: active.transform(TransformAfter),
 			}),
 		],
 		class_name: 'SliderBox',
