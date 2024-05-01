@@ -1,12 +1,12 @@
+import MenuVis from '@services/menuvis';
+
 export default Widget.Window({
-	visible: false,
-	class_name: 'BarMenu',
+	visible: MenuVis.bind('barmenu'),
 	name: 'barmenu',
 	anchor: ['top'],
-	margins: [16,0,0,0],
+	layer: 'overlay',
+	css: 'background-color: transparent',
 	child: Widget.Box({
-		css: 'background-color: black;',
-		width_request: 100,
-		height_request: 100,
+		class_name: 'BarMenu',
 	}),
 });

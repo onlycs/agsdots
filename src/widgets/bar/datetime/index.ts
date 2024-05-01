@@ -1,6 +1,6 @@
 import { Hoverable } from '@prelude';
 import { Moment } from '@variables';
-import OpenMenu from '@services/openmenu';
+import MenuVis from '@services/menuvis';
 
 export default Hoverable(Widget.Box({
 	children: [
@@ -19,5 +19,5 @@ export default Hoverable(Widget.Box({
 	],
 	class_name: 'BarElement ExtraPadding',
 }), {
-	on_primary_click_release: () => OpenMenu.toggle('barmenu'),
+	on_primary_click_release: () => MenuVis.set('barmenu'),
 });

@@ -26,6 +26,9 @@
             ],
             "@prelude": [
                 "./src/prelude"
+            ],
+            "types/*": [
+                "./types/*"
             ]
         },
         "skipLibCheck": true,
