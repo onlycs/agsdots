@@ -17,7 +17,7 @@ export default Hoverable(Widget.Box({
 			class_name: 'TextMain TextLarge DateTime',
 		}),
 	],
-	class_name: 'BarElement ExtraPadding',
+	class_name: 'BarElement DateTimeBox',
 }), {
 	on_primary_click_release: () => MenuVis.set('barmenu'),
 });

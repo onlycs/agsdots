@@ -6,6 +6,6 @@ import { Hoverable } from '@prelude';
 export default Hoverable(Widget.Box({
 	vertical: true,
 	children: [Active, Available],
-	class_name: 'BarElement ExtraPadding',
+	class_name: 'BarElement WorkspaceBox',
 	homogeneous: true,
 }));

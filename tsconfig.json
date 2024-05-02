@@ -24,12 +24,12 @@
             "@variables": [
                 "./src/variables"
             ],
+            "@barmenu/*": [
+                "./src/widgets/barmenu/*"
+            ],
             "@prelude": [
                 "./src/prelude"
             ],
-            "types/*": [
-                "./types/*"
-            ]
         },
         "skipLibCheck": true,
         "moduleResolution": "Node"

@@ -1,9 +1,10 @@
 $BgAlpha: #10141760;
-$BgSolid: #101417;
+$BgSolid: #252525;
 $Hover: rgba(224, 227, 232, 0.1);
 $Text: rgb(224, 227, 232);
 $TextSub: rgb(65, 71, 77);
-$BorderRadius: 0.2rem;
+$BorderRadius: 0.25rem;
+$LargeRadius: 1rem;
 
 .TextMain {
 	font-family: 'Lexend', 'Readex Pro';
@@ -26,5 +27,22 @@ $BorderRadius: 0.2rem;
 
 	&.Hover {
 		background-color: $Hover;
+	}
+}
+
+@mixin Box($solid: true, $hover: false, $padding: 0.15rem 1rem) {
+	border-radius: $BorderRadius;
+	padding: $padding;
+
+	@if $solid {
+		background-color: $BgSolid;
+	}
+
+	@else {
+		background-color: $BgAlpha;
+	}
+
+	@if $hover {
+		@extend .HoverBox;
 	}
 }

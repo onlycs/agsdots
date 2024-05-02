@@ -1,11 +1,6 @@
 @import '../prelude';
 
 .BarElement {
-    padding: 0.15rem 0.5rem;
-
-    &.ExtraPadding {
-        padding: 0.15rem 1rem;
-    }
-
-    @extend .HoverBox;
+    @include Box($hover: true, $padding: 0.15rem 1rem);
+    background-color: transparent;
 }

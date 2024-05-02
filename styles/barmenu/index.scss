@@ -1,8 +1,13 @@
 @import '../prelude';
 
-.BarMenu {
+@import 'notifications';
+
+.BarMenuBox {
+    @include Box($padding: 1rem);
+
+    border-radius: $LargeRadius;
     margin-top: 0.75rem;
-    background-color: $BgSolid;
-    min-width: 5rem;
-    min-height: 5rem;
+    min-width: 55rem;
+    min-height: 45rem;
+    border: 2px solid rgba(40, 40, 40, 25);
 }
