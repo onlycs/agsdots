@@ -1,4 +1,46 @@
+@import '../prelude';
+
+$NotificationHeader: #969696;
+
 .NotificationsBox {
     min-width: 33rem;
-    background-color: black;
+}
+
+.Notification {
+    @include Box($padding: 0.8rem 0.9rem, $bg: surface, $hover: true);
+
+    min-height: 5rem;
+    border-radius: 0.8rem;
+}
+
+.NotificationAppIcon {
+    margin-right: 0.4rem;
+    color: $NotificationHeader;
+}
+
+.NotificationAppName {
+    font-family: 'Lexend', 'Readex Pro';
+    font-size: 1rem;
+    color: $NotificationHeader;
+    font-weight: 800;
+    margin-right: 0.5rem;
+}
+
+.NotificationTimestamp {
+    font-family: 'Lexend', 'Readex Pro';
+    font-size: 0.75rem;
+    color: $NotificationHeader;
+    font-weight: 400;
+    margin-top: 0.25rem;
+}
+
+.NotificationTitle {
+    @extend .TextMain;
+
+    font-size: 1.15rem;
+    font-weight: 500;
+}
+
+.NotificationBody {
+    @extend .TextMain;
 }
