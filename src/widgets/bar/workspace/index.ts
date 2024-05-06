@@ -1,11 +1,13 @@
 import Active from '@bar/workspace/active';
 import Available from '@bar/workspace/indicator';
 
-import { Hoverable } from '@prelude';
+import Interactable from '@components/interactable';
 
-export default Hoverable(Widget.Box({
-	vertical: true,
-	children: [Active, Available],
-	class_name: 'BarElement WorkspaceBox',
-	homogeneous: true,
-}));
+export default Interactable({ 
+	child: Widget.Box({
+		vertical: true,
+		children: [Active, Available],
+		class_name: 'BarElement WorkspaceBox',
+		homogeneous: true,
+	}) 
+});

@@ -3,8 +3,8 @@
 @import 'notifications';
 
 .BarMenuBox {
-    @include Box($padding: 1rem);
-
+    background-color: $BgSolid;
+    padding: 1rem;
     border-radius: $LargeRadius;
     margin-top: 0.75rem;
     min-width: 55rem;

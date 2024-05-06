@@ -1,6 +1,9 @@
 @import '../prelude';
 
 .BarElement {
-    @include Box($hover: true, $padding: 0.15rem 1rem);
+    @include Hoverable();
+
+    padding: 0.15rem 1rem;
+    border-radius: $BorderRadius;
     background-color: transparent;
 }

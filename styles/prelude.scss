@@ -1,10 +1,4 @@
-$BgAlpha: #10141760;
-$BgSolid: #252525;
-$Hover: rgba(224, 227, 232, 0.1);
-$Text: rgb(224, 227, 232);
-$TextSub: rgb(65, 71, 77);
-$BorderRadius: 0.25rem;
-$LargeRadius: 1rem;
+@import 'colors';
 
 .TextMain {
 	font-family: 'Lexend', 'Readex Pro';
@@ -22,31 +16,16 @@ $LargeRadius: 1rem;
 	font-size: 1.2rem;
 }
 
-.HoverBox {
-	border-radius: $BorderRadius;
-
+@mixin Hoverable() {
 	&.Hover {
 		background-color: $Hover;
 	}
 }
 
-@mixin Box($bg: solid, $hover: false, $padding: 0.15rem 1rem) {
-	border-radius: $BorderRadius;
-	padding: $padding;
+@mixin Clickable() {
+	transition: all 0.1s ease;
 
-	@if $bg ==solid {
-		background-color: $BgSolid;
-	}
-
-	@else if $bg ==alpha {
-		background-color: $BgAlpha;
-	}
-
-	@else if $bg ==surface {
-		background-color: rgba(255, 255, 255, 0.05);
-	}
-
-	@if $hover {
-		@extend .HoverBox;
+	&.Click {
+		background-color: $HoverClick;
 	}
 }

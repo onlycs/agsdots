@@ -25,6 +25,9 @@
             "@variables": [
                 "./src/variables"
             ],
+            "@components/*": [
+                "./src/components/*"
+            ],
             "@barmenu/*": [
                 "./src/widgets/barmenu/*"
             ],

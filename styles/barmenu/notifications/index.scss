@@ -7,9 +7,10 @@ $NotificationHeader: #969696;
 }
 
 .Notification {
-    @include Box($padding: 0.8rem 0.9rem, $bg: surface, $hover: true);
+    @include Hoverable();
 
-    min-height: 5rem;
+    padding: 0.8rem 0.9rem;
+    background-color: $Surface1;
     border-radius: 0.8rem;
 }
 
@@ -34,6 +35,12 @@ $NotificationHeader: #969696;
     margin-top: 0.25rem;
 }
 
+.NotificationIcon {
+    border: 1px solid rgba(40, 40, 40, 25);
+    border-radius: 0.75rem;
+    margin-right: 1rem;
+}
+
 .NotificationTitle {
     @extend .TextMain;
 
@@ -43,4 +50,25 @@ $NotificationHeader: #969696;
 
 .NotificationBody {
     @extend .TextMain;
+}
+
+.NotificationAction {
+    @include Hoverable();
+    @include Clickable();
+
+    padding: 0.5rem;
+    background-color: rgba(255, 255, 255, 0.05);
+    border-radius: 0;
+    border-right: 2px solid rgba(255, 255, 255, 0.05);
+}
+
+.NotificationAction:first-child {
+    border-top-left-radius: 0.75rem;
+    border-bottom-left-radius: 0.75rem;
+}
+
+.NotificationAction:last-child {
+    border-top-right-radius: 0.75rem;
+    border-bottom-right-radius: 0.75rem;
+    border-right: none;
 }
