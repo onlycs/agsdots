@@ -3,8 +3,8 @@ import ImageFromUrl from '@services/image';
 import Button from '@components/button';
 import GLib from 'gi://GLib';
 
-import { Notification } from 'types/service/notifications';
-import { type Widget } from 'types/widgets/widget';
+import { Notification } from 'resource:///com/github/Aylur/ags/service/notifications.js';
+import { Box } from 'resource:///com/github/Aylur/ags/widgets/box.js';
 
 const Notifications = await Service.import('notifications');
 
@@ -65,7 +65,7 @@ const Content = (n: Notification) => {
 		})
 	);
 
-	const children: Widget<unknown>[] = [
+	const children: any[] = [
 		Widget.Box({
 			class_name: 'NotificationText',
 			vertical: true,
@@ -92,14 +92,21 @@ const Actions = (n: Notification) => Widget.Box({
 	children: n.actions.map(a => Button({
 		label: a.label,
 		class_name: 'NotificationAction',
+		hexpand: true,
 		on_primary_click_release: () => Notifications.InvokeAction(n.id, a.id),
 	}))
 });
 
-export default (n: Notification) => Widget.Box({
+export const RemoveNotification = (w: Box<Box<any, unknown>, unknown>) => {
+	
+};
+
+const NotificationWidget = (n: Notification) => Widget.Box({
+	name: `Notification-${n.id}`,
 	class_name: 'Notification',
 	vertical: true,
 	spacing: 12,
+	hexpand: false,
 	children: [
 		Header(n),
 		Content(n),
@@ -109,4 +116,16 @@ export default (n: Notification) => Widget.Box({
 				: []
 		)
 	],
+});
+
+export default Widget.Box({
+	class_name: 'NotificationsBox',
+	vertical: true,
+	children: [] as any[],
+	spacing: 16,
+	setup: self => {
+		self.hook(Notifications, (self) => {
+			self.children = Notifications.notifications.map(NotificationWidget);
+		}, 'notify');
+	}
 });

@@ -10,7 +10,11 @@
         "baseUrl": ".",
         "typeRoots": [
             "./types/*",
-            "./types/@girs/*"
+            "./types",
+            "./types/@girs/*",
+            "./types/@girs",
+            "./node_modules/@girs",
+            "./node_modules/@girs/*"
         ],
         "paths": {
             "@widgets/*": [

@@ -1,6 +1,5 @@
 import MenuVis from '@services/menuvis';
-
-import Notifications from '@barmenu/notifications';
+import Notifications from '@barmenu/notification';
 
 export default Widget.Window({
 	visible: MenuVis.bind('barmenu'),

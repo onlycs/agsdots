@@ -1,16 +1,16 @@
 import AgsButton from 'resource:///com/github/Aylur/ags/widgets/button.js';
+import Gtk from 'gi://Gtk?version=3.0';
 
-import { type Widget } from 'types/widgets/widget';
 import { type ButtonProps } from 'types/widgets/button';
 
 import { AddClickClass, AddHoverClass, RemoveClickClass, RemoveHoverClass, type EventHandler, JoinHandlers } from '@prelude';
 
 
-export default function Button<Child extends Widget<Attr>, Attr = unknown>(props: ButtonProps<Child, Attr>): AgsButton<Child, Attr> {
-	const _hover: EventHandler<AgsButton<Child, Attr>> = self => AddHoverClass(self.child);
-	const _unhover: EventHandler<AgsButton<Child, Attr>> = self => RemoveHoverClass(self.child);
-	const _click: EventHandler<AgsButton<Child, Attr>> = self => AddClickClass(self.child);
-	const _unclick: EventHandler<AgsButton<Child, Attr>> = self => RemoveClickClass(self.child); 
+export default function Button<Child extends Gtk.Widget, Attr = unknown>(props: ButtonProps<Child, Attr>): AgsButton<Child, Attr> {
+	const _hover: EventHandler<AgsButton<Child, Attr>> = self => AddHoverClass(self);
+	const _unhover: EventHandler<AgsButton<Child, Attr>> = self => RemoveHoverClass(self);
+	const _click: EventHandler<AgsButton<Child, Attr>> = self => AddClickClass(self);
+	const _unclick: EventHandler<AgsButton<Child, Attr>> = self => RemoveClickClass(self); 
 	const _setup = (self: AgsButton<Child, Attr>) => self.on('leave-notify-event', _unhover);
 
 	return Widget.Button({

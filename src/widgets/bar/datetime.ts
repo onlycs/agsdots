@@ -1,6 +1,7 @@
-import { Moment } from '@variables';
 import MenuVis from '@services/menuvis';
 import Interactable from '@components/interactable';
+
+import { Moment } from '@variables';
 
 export default Interactable({
 	child: Widget.Box({

@@ -1,5 +1,5 @@
-import Window from '@bar/window';
-import Workspace from '@bar/workspace';
+import Window from '@bar/activewindow';
+import Workspace from '@bar/activeworkspace';
 import DateTime from '@bar/datetime';
 
 export default Widget.Window({
