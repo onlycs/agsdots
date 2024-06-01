@@ -9,7 +9,7 @@
 .TextSub {
 	font-family: 'Lexend', 'Readex Pro';
 	font-size: smaller;
-	color: $TextSub;
+	color: darken($Text, 50%);
 }
 
 .TextLarge {
@@ -18,7 +18,7 @@
 
 @mixin Hoverable() {
 	&.Hover {
-		background-color: $Hover;
+		background-color: transparentize($Foreground, 0.9);
 	}
 }
 
@@ -26,6 +26,9 @@
 	transition: all 0.05s ease;
 
 	&.Click {
-		background-color: $HoverClick;
+		background-color: darken(transparentize($Foreground, 0.9), 5%);
 	}
 }
+
+$BorderRadius: 0.5rem;
+$LargeRadius: 1.5rem;

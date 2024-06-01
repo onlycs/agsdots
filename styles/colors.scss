@@ -1,14 +1,43 @@
-$BgAlpha: #10141760;
-$BgSolid: #252525;
+$SelectedFg: #fff;
+$SelectedBg: darken(#3584e4, 20%);
+$SelectedBorder: darken($SelectedBg, 30%);
 
-$Hover: rgba(224, 227, 232, 0.1);
-$HoverClick: rgba(255, 255, 255, 0.065);
+$Text: #fff;
+$Link: lighten($SelectedBg, 20%);
+$LinkVisited: lighten($SelectedBg, 10%);
 
-$Text: rgb(224, 227, 232);
-$TextSub: rgb(65, 71, 77);
+$Foreground: #eeeeec;
+$Background: darken(desaturate(#3d3846, 100%), 4%);
+$Base: lighten(desaturate(#241f31, 100%), 2%);
+$Border: darken($Background, 10%);
 
-$BorderRadius: 0.25rem;
-$LargeRadius: 1rem;
+$InsensitiveFg: mix($Foreground, $Background, 50%);
+$InsensitiveBg: mix($Background, $Base, 60%);
+$InsensitiveBase: $Base;
+$InsensitiveBorder: mix($Border, $Background, 80%);
 
-$Surface1: #2F2F2F;
-$Surface2: #3D3D3D;
+$ScrollbarBg: mix($Base, $Background, 50%);
+$Scrollbar: mix($Foreground, $Background, 60%);
+$ScrollbarHover: mix($Foreground, $Background, 80%);
+$ScrollbarActive: lighten($SelectedBg, 10%);
+
+$Warning: #f57900;
+$Error: #cc0000;
+$Success: darken(#33d17a, 10%);
+$Destructive: darken(#e01b24, 10%);
+
+$OsdFg: #eeeeec;
+$OsdBg: transparentize(darken(desaturate(#3d3846, 100%), 10%), 0.3);
+$OsdInsensitiveFg: mix($OsdFg, opacify($OsdBg, 1), 50%);
+$OsdInsensitiveBg: transparentize(mix($OsdFg, opacify($OsdBg, 1), 10%), 0.5);
+$OsdText: #fff;
+
+$BackdropFg: mix($Foreground, $Background, 50%);
+$BackdropBg: $Background;
+$BackdropBase: lighten($Base, 1%);
+$BackdropText: mix($Text, $BackdropBase, 80%);
+$BackdropBorder: mix($Foreground, $BackdropBg, 50%);
+
+$BackdropInsensitive: lighten($BackdropBg, 15%);
+$BackdropSelectedFg: $BackdropText;
+$BackdropSelectedBg: transparentize(desaturate($SelectedBg, 100%), 0.5);

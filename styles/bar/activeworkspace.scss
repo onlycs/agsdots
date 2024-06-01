@@ -7,10 +7,10 @@
 	border-radius: 16px;
 	background-color: transparent;
 
-	border: 1px solid $TextSub;
+	border: 1px solid darken($Text, 50%);
 
 	&.Windows {
-		background-color: $TextSub;
+		background-color: darken($Text, 50%);
 	}
 
 	&.Last {
