@@ -1,15 +1,20 @@
+# agsdots
 
-# Starter Config
+My dotfiles for aylurs-gtk-shell (ags), basically recreating a hyprland-friendly version
+of gnome-shell.
 
-if suggestions don't work, first make sure
-you have TypeScript LSP working in your editor
+I like gnome shell don't kill me for it. This project is not finished.
 
-if you do not want typechecking only suggestions
+## Task List
 
-```json
-// tsconfig.json
-"checkJs": false
-```
-
-types are symlinked to:
-/usr/local/share/com.github.Aylur.ags/types
+- [x] Active Window
+- [x] Active Workspace
+- [x] Date/Time
+- [x] Notifications
+- [ ] Do not disturb
+- [ ] Clock & Calendar Widgets
+- [ ] Quick Settings
+- [ ] Minimized app drawer thingy
+- [ ] Overview (no, i'm actually going to implement gnome-shell's overview, watch me)
+- [ ] Apps list
+- [ ] More stuff I couldn't think of in the five minutes I spent writing this
