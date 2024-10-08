@@ -1,45 +1,40 @@
 {
-    "compilerOptions": {
-        "target": "ES2022",
-        "module": "ES2022",
-        "lib": [
-            "ES2022"
-        ],
-        "strict": true,
-        "noImplicitAny": false,
-        "baseUrl": ".",
-        "typeRoots": [
-            "./types/*",
-            "./types",
-            "./types/@girs/*",
-            "./types/@girs",
-            "./node_modules/@girs",
-            "./node_modules/@girs/*"
-        ],
-        "paths": {
-            "@widgets/*": [
-                "./src/widgets/*"
-            ],
-            "@bar/*": [
-                "./src/widgets/bar/*"
-            ],
-            "@services/*": [
-                "./src/services/*"
-            ],
-            "@variables": [
-                "./src/variables"
-            ],
-            "@components/*": [
-                "./src/components/*"
-            ],
-            "@barmenu/*": [
-                "./src/widgets/barmenu/*"
-            ],
-            "@prelude": [
-                "./src/prelude"
-            ],
-        },
-        "skipLibCheck": true,
-        "moduleResolution": "Node"
-    }
+	"compilerOptions": {
+		"target": "ES2022",
+		"module": "ES2022",
+		"lib": [
+			"ES2022"
+		],
+		"strict": true,
+		"noImplicitAny": false,
+		"baseUrl": ".",
+		"typeRoots": [
+			"./types"
+		],
+		"paths": {
+			"@widgets/*": [
+				"./src/widgets/*"
+			],
+			"@bar/*": [
+				"./src/widgets/bar/*"
+			],
+			"@services/*": [
+				"./src/services/*"
+			],
+			"@variables": [
+				"./src/variables"
+			],
+			"@components/*": [
+				"./src/components/*"
+			],
+			"@barmenu/*": [
+				"./src/widgets/barmenu/*"
+			],
+			"@prelude": [
+				"./src/prelude"
+			],
+		},
+		"skipLibCheck": true,
+		"moduleResolution": "Node"
+	}
 }

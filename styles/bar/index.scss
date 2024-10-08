@@ -1,10 +1,25 @@
-@import 'activewindow';
-@import 'activeworkspace';
-@import 'prelude';
-@import 'datetime';
-@import 'clickoff';
+@import '../colors';
 
-.Bar {
+@mixin BarHoverable() {
+	&.Hover {
+		background-color: transparentize($Foreground, 0.9);
+	}
+}
+
+@mixin BarClickable() {
+	transition: all 0.05s ease;
+
+	&.Click {
+		background-color: darken(transparentize($Foreground, 0.9), 10%);
+	}
+}
+
+window#bar .Bar {
 	background-color: black;
 	padding: 0.35rem 0.5rem;
+
+	@import 'prelude';
+	@import 'activewindow';
+	@import 'activeworkspace';
+	@import 'datetime';
 }

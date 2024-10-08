@@ -1,9 +1,7 @@
-@import '../prelude';
-
 .DateTime {
-    margin: 6px 0;
+	margin: 6px 0;
 }
 
 .DateTimeBox {
-    @include Clickable();
+	@include BarClickable();
 }

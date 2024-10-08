@@ -1,74 +1,118 @@
 @import '../prelude';
 
 $NotificationHeader: #969696;
+$Shadow: darken($BackdropBase, 5%);
 
 .NotificationsBox {
-	min-width: 33rem;
-}
+	min-width: 28rem;
 
-.Notification {
-	@include Hoverable();
+	.Footer {
+		margin-top: 1rem;
 
-	padding: 0.8rem 0.9rem;
-	background-color: transparentize($BackdropFg, 0.9);
-	border-radius: 0.8rem;
-}
+		.Button {
+			@include Button();
 
-.NotificationAppIcon {
-	margin-right: 0.4rem;
-	color: $NotificationHeader;
-}
+			background-color: $Background;
+			min-width: 4rem;
+		}
 
-.NotificationAppName {
-	font-family: 'Lexend', 'Readex Pro';
-	font-size: 1rem;
-	color: $NotificationHeader;
-	font-weight: 800;
-	margin-right: 0.5rem;
-}
+		.DNDLabel {
+			font-weight: 500;
+			margin-left: 0.5rem;
+		}
+	}
 
-.NotificationTimestamp {
-	font-family: 'Lexend', 'Readex Pro';
-	font-size: 0.75rem;
-	color: $NotificationHeader;
-	font-weight: 400;
-	margin-top: 0.25rem;
-}
+	.Scrollbox {
+		min-width: 28rem;
 
-.NotificationIcon {
-	border: 1px solid rgba(40, 40, 40, 25);
-	border-radius: 0.75rem;
-	margin-right: 1rem;
-}
+		undershoot.top {
+			background: linear-gradient(to top, transparentize($Shadow, 1), $Shadow)
+		}
 
-.NotificationTitle {
-	@extend .TextMain;
+		undershoot.bottom {
+			background: linear-gradient(to bottom, transparentize($Shadow, 1), $Shadow);
+		}
 
-	font-size: 1.15rem;
-	font-weight: 500;
-}
+		scrollbar:hover {
+			background-color: transparent;
+		}
 
-.NotificationBody {
-	@extend .TextMain;
-}
+		scrollbar slider {
+			border: none;
 
-.NotificationAction {
-	@include Hoverable();
-	@include Clickable();
+			&:hover {
+				min-width: 0.5rem;
+			}
+		}
+	}
 
-	padding: 0.5rem;
-	background-color: rgba(255, 255, 255, 0.05);
-	border-radius: 0;
-	border-right: 2px solid rgba(255, 255, 255, 0.05);
-}
+	.Notifications .Notification {
+		padding: 0.8rem 0.9rem;
+		background-color: transparentize($BackdropFg, 0.9);
+		border-radius: 0.8rem;
+		margin-right: 1rem;
 
-.NotificationAction:first-child {
-	border-top-left-radius: 0.75rem;
-	border-bottom-left-radius: 0.75rem;
-}
+		.Header {
+			.AppIcon {
+				margin-right: 0.4rem;
+				color: $NotificationHeader;
+			}
 
-.NotificationAction:last-child {
-	border-top-right-radius: 0.75rem;
-	border-bottom-right-radius: 0.75rem;
-	border-right: none;
+			.AppName {
+				font-size: 1rem;
+				color: $NotificationHeader;
+				font-weight: 600;
+				margin-right: 0.5rem;
+			}
+
+			.Timestamp {
+				font-size: 0.75rem;
+				color: $NotificationHeader;
+				font-weight: 400;
+				margin-top: 0.25rem;
+			}
+		}
+
+		.Content {
+			.Image {
+				border: 1px solid rgba(40, 40, 40, 25);
+				border-radius: 0.75rem;
+				margin-right: 1rem;
+			}
+
+			.Title {
+				@extend .TextMain;
+
+				font-size: 1.15rem;
+				font-weight: 500;
+			}
+
+			.Body {
+				@extend .TextMain;
+			}
+		}
+
+		.Actions .Action {
+			padding: 0.5rem;
+			background-color: rgba(255, 255, 255, 0.05);
+			border-radius: 0;
+			border-right: 2px solid rgba(255, 255, 255, 0.05);
+
+			&:first-child {
+				border-top-left-radius: 0.75rem;
+				border-bottom-left-radius: 0.75rem;
+			}
+
+			&:last-child {
+				border-top-right-radius: 0.75rem;
+				border-bottom-right-radius: 0.75rem;
+				border-right: none;
+			}
+		}
+
+		.Close {
+			border-radius: 5rem;
+			padding: 0.25rem 0.5rem;
+		}
+	}
 }

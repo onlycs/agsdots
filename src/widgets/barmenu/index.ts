@@ -9,7 +9,10 @@ export default Widget.Window({
 	css: 'background-color: transparent',
 	child: Widget.Box({
 		class_name: 'BarMenuBox',
-		children: [Notifications],
+		children: [
+			Notifications,
+			Widget.Separator({ orientation: 1 })
+		],
 		spacing: 16,
 	}),
 });

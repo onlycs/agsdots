@@ -1,13 +1,13 @@
 @import 'colors';
 
 .TextMain {
-	font-family: 'Lexend', 'Readex Pro';
+	font-family: 'Cantarell';
 	font-size: medium;
 	color: $Text;
 }
 
 .TextSub {
-	font-family: 'Lexend', 'Readex Pro';
+	font-family: 'Cantarell';
 	font-size: smaller;
 	color: darken($Text, 50%);
 }
@@ -16,17 +16,16 @@
 	font-size: 1.2rem;
 }
 
-@mixin Hoverable() {
-	&.Hover {
-		background-color: transparentize($Foreground, 0.9);
-	}
-}
+@mixin Button($bg: $Background) {
+	background-color: $bg;
+	transition: all 0.1s ease;
 
-@mixin Clickable() {
-	transition: all 0.05s ease;
+	&.Hover {
+		background-color: lighten($bg, 5%);
+	}
 
 	&.Click {
-		background-color: darken(transparentize($Foreground, 0.9), 5%);
+		background-color: lighten($bg, 10%);
 	}
 }
 

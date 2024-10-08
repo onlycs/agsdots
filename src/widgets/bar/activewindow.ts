@@ -3,14 +3,14 @@ import Interactable from '@components/interactable';
 const Hyprland = await Service.import('hyprland');
 
 const ClassTitleOverrides: Record<string, (title: string) => string> = {
-	'kitty': title => title + ' - Terminal',
+	'kitty': (_) => 'Terminal',
 	'code-url-handler': title => title.replace('Visual Studio Code', 'VSCode'),
 	'firefox': title => title.replace('Mozilla Firefox', 'Firefox'),
 	'': _ => 'Desktop',
 };
 
 const ClassOverrides: Record<string, string> = {
-	'code-url-handler': 'code',
+	'code-url-handler': 'vscode',
 	'': 'hyprland',
 };
 
@@ -51,5 +51,5 @@ export default Interactable({
 		],
 		vertical: true,
 		class_name: 'BarElement ActiveWindow',
-	}) 
+	})
 });

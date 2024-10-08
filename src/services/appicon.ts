@@ -5,5 +5,5 @@ const Icons = IconTheme.list_icons('Applications');
 
 export default function GetIcon(name: string) {
 	if (Icons.includes(name)) return name;
-	else return 'notifications-applet';
+	else return 'preferences-system-notifications-symbolic';
 }

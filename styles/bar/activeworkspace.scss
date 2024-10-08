@@ -1,9 +1,7 @@
-@import '../prelude';
-
 .WorkspaceIndicator {
 	min-width: 4px;
 	min-height: 4px;
-	margin: 4px 0.5rem 7px 0;
+	margin: 5px 6px 7px 0;
 	border-radius: 16px;
 	background-color: transparent;
 
@@ -21,12 +19,12 @@
 .SliderSegment {
 	transition: all 0.1s linear;
 	background-color: $Text;
-	border-radius: 16px;
+	border-radius: 3px;
 	min-height: 6px;
-	margin: 8px 0 3px 0;
+	margin: 9px 0 3px 0;
 
 	&.Current {
-		margin-right: 0.5rem;
-		margin-left: 0.5rem;
+		margin-right: 6px;
+		margin-left: 6px;
 	}
 }

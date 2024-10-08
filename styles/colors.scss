@@ -16,10 +16,9 @@ $InsensitiveBg: mix($Background, $Base, 60%);
 $InsensitiveBase: $Base;
 $InsensitiveBorder: mix($Border, $Background, 80%);
 
-$ScrollbarBg: mix($Base, $Background, 50%);
-$Scrollbar: mix($Foreground, $Background, 60%);
-$ScrollbarHover: mix($Foreground, $Background, 80%);
-$ScrollbarActive: lighten($SelectedBg, 10%);
+$Scrollbar: darken(mix($Foreground, $Background, 60%), 25%);
+$ScrollbarHover: lighten($Scrollbar, 10%);
+$ScrollbarActive: darken($ScrollbarHover, 15%);
 
 $Warning: #f57900;
 $Error: #cc0000;

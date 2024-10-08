@@ -1,16 +1,18 @@
 {
-  "name": "ags",
-  "devDependencies": {
-    "@eslint/eslintrc": "^3.0.2",
-    "@eslint/js": "^8.56.0",
-    "@girs/accountsservice-1.0": "^1.0.0-3.2.7",
-    "@typescript-eslint/eslint-plugin": ">=7.0.2",
-    "@typescript-eslint/parser": ">=7.0.2",
-    "typescript": "^5.4.5",
-    "eslint": "8.56.0"
-  },
-  "scripts": {
-    "lint": "eslint . --fix"
-  },
-  "sourceType": "module"
+	"name": "ags",
+	"devDependencies": {
+		"@eslint/eslintrc": "^3.0.2",
+		"@eslint/js": "^8.56.0",
+		"@girs/accountsservice-1.0": "^1.0.0-3.2.7",
+		"@typescript-eslint/eslint-plugin": ">=7.0.2",
+		"@typescript-eslint/parser": ">=7.0.2",
+		"typescript": "^5.4.5",
+		"eslint": "8.56.0"
+	},
+	"scripts": {
+		"lint": "eslint . --fix",
+		"start": "ags -c ./config.js",
+		"watch": "nodemon -w . --exec 'bun start' --ext js,ts"
+	},
+	"sourceType": "module"
 }

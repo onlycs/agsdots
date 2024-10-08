@@ -2,7 +2,7 @@ import Gtk from 'gi://Gtk';
 import Box from 'resource:///com/github/Aylur/ags/widgets/box.js';
 import Interactable from '@components/interactable';
 
-import { ActiveID } from 'resource:///com/github/Aylur/ags/service/hyprland.js'; 
+import { ActiveID } from 'resource:///com/github/Aylur/ags/service/hyprland.js';
 import { Binding } from 'resource:///com/github/Aylur/ags/service.js';
 
 const Hyprland = await Service.import('hyprland');
@@ -30,7 +30,7 @@ const Indicator = () => {
 		let classname = 'WorkspaceIndicator';
 
 		if (i == 9) classname += ' Last';
-		if (mask & 1<<i) classname += ' Windows';
+		if (mask & 1 << i) classname += ' Windows';
 
 		return classname;
 	}
@@ -39,7 +39,7 @@ const Indicator = () => {
 		const widgets: Box<Gtk.Widget, unknown>[] = [];
 
 		for (const i of Array(10).keys()) {
-			widgets.push(Widget.Box({ 
+			widgets.push(Widget.Box({
 				class_name: IndicatorMask.bind('value').transform(v => MakeClassName(v, i))
 			}));
 		}
@@ -55,64 +55,65 @@ const Indicator = () => {
 	});
 }
 
-const ActiveWorkspace = (active: Binding<ActiveID, 'id', number>) => {
-	const WidthDot = 6;
-	const WidthSpace = 6;
-	const MaxWidth = (WidthDot * 9) + (WidthSpace * 8);
-	
-	const TransformBefore = (id: number) => {
-		const Spacing = (WidthDot * id) + (WidthSpace * (id-1));
-	
+const ActiveWorkspace = (workspace: Binding<ActiveID, 'id', number>) => {
+	const dot = 6;
+	const space = 6;
+
+	const active = workspace.transform(id => id - 1);
+
+	const Before = (id: number) => {
+		const spacing = (id * dot) + ((id - 1) * space);
+		console.log('Before', id, spacing);
+
 		switch (id) {
 			case 0: return 'background-color: transparent';
-			default: return `min-width: ${Spacing}px;`;
+			default: return `min-width: ${spacing}px;`;
 		}
 	}
-	
-	const TransformCurrent = (id: number) => {
+
+	const Current = (id: number) => {
 		const EndMargin = ({
 			0: 'margin-left: 0',
 			9: 'margin-right: 0',
 		})[id] || '';
-	
+
 		return `min-width: 6px; ${EndMargin}`;
 	}
-	
-	const TransformAfter = (id: number) => {
-		const Spacing = MaxWidth - (id * (WidthDot + WidthSpace));
-	
+
+	const After = (id: number) => {
+		const spacing = ((9 - id) * dot) + (Math.max(0, 8 - id) * space);
+		console.log('After', id, spacing);
+
 		switch (id) {
 			case 9: return 'background-color: transparent';
-			default: return `min-width: ${Spacing}px;`;
+			default: return `min-width: ${spacing}px;`;
 		}
 	}
-
-	active = active.transform(id => (id - 1) % 10);
 
 	return Widget.Box({
 		children: [
 			Widget.Box({
 				class_name: 'SliderSegment',
-				css: active.transform(TransformBefore),
+				css: active.transform(Before),
 			}),
 			Widget.Box({
 				class_name: 'SliderSegment Current',
-				css: active.transform(TransformCurrent),
+				css: active.transform(Current),
 			}),
 			Widget.Box({
 				class_name: 'SliderSegment',
-				css: active.transform(TransformAfter),
+				css: active.transform(After),
 			}),
 		],
 		class_name: 'SliderBox',
 	});
 };
 
-export default Interactable({ 
+export default Interactable({
 	child: Widget.Box({
 		vertical: true,
 		children: [ActiveWorkspace(Hyprland.active.workspace.bind('id')), Indicator()],
 		class_name: 'BarElement WorkspaceBox',
 		homogeneous: true,
-	}) 
+	})
 });
