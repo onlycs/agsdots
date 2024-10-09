@@ -18,8 +18,12 @@ $Shadow: darken($BackdropBase, 5%);
 		}
 
 		.DNDLabel {
-			font-weight: 500;
-			margin-left: 0.5rem;
+			font-weight: 700;
+			margin-left: 1rem;
+		}
+
+		.Switch {
+			margin: 0.25rem 0.75rem;
 		}
 	}
 

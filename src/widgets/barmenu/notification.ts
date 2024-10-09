@@ -4,8 +4,11 @@ import Button from '@components/button';
 import GLib from 'gi://GLib';
 
 import { Notification } from 'resource:///com/github/Aylur/ags/service/notifications.js';
+import DNDManager from '@services/dnd';
 
 const NotifyService = await Service.import('notifications');
+
+const hasNotifications = () => NotifyService.notifications.length > 0;
 
 const RelTime = (utime: number) => {
 	const time = GLib.DateTime.new_from_unix_local(utime);
@@ -159,6 +162,7 @@ const NotificationList = (notifs: Notification[]) => Widget.Scrollable({
 	child: Widget.Box({
 		class_name: 'Notifications',
 		vertical: true,
+		vexpand: true,
 		children: notifs.map(NotificationWidget),
 		spacing: 16,
 	}),
@@ -171,10 +175,14 @@ const Footer = () => Widget.CenterBox({
 		halign: 1,
 		children: [
 			Widget.Label({
-				label: 'laborum consequat',
+				label: 'Do Not Disturb',
 				class_name: 'DNDLabel',
-			})
-		]
+			}),
+			Widget.Switch({
+				class_name: 'Switch',
+				on_activate: DNDManager.switch,
+			}),
+		],
 	}),
 	end_widget: Widget.Box({
 		halign: 2,
@@ -183,9 +191,9 @@ const Footer = () => Widget.CenterBox({
 				class_name: 'Button',
 				label: 'Clear',
 				on_primary_click_release: () => NotifyService.Clear(),
+				setup: self => self.hook(NotifyService, (self) => self.visible = hasNotifications(), 'notify')
 			})
 		],
-		setup: self => self.hook(NotifyService, (self) => self.visible = NotifyService.notifications.length > 0, 'notify'),
 	}),
 });
 
