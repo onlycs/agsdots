@@ -63,7 +63,6 @@ const ActiveWorkspace = (workspace: Binding<ActiveID, 'id', number>) => {
 
 	const Before = (id: number) => {
 		const spacing = (id * dot) + ((id - 1) * space);
-		console.log('Before', id, spacing);
 
 		switch (id) {
 			case 0: return 'background-color: transparent';
@@ -82,7 +81,6 @@ const ActiveWorkspace = (workspace: Binding<ActiveID, 'id', number>) => {
 
 	const After = (id: number) => {
 		const spacing = ((9 - id) * dot) + (Math.max(0, 8 - id) * space);
-		console.log('After', id, spacing);
 
 		switch (id) {
 			case 9: return 'background-color: transparent';

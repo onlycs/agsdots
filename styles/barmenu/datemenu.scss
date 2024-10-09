@@ -1,0 +1,18 @@
+.DateMenu {
+	.Date {
+		margin-top: 1rem;
+		margin-left: 1.5rem;
+
+		.Dotw {
+			font-size: 1.25rem;
+			font-weight: 600;
+			color: $TextDark;
+		}
+
+		.FullDate {
+			font-size: 1.5rem;
+			font-weight: 800;
+			color: $TextDark;
+		}
+	}
+}

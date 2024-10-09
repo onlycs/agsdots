@@ -1,5 +1,6 @@
 import MenuVis from '@services/menuvis';
 import Notifications from '@barmenu/notification';
+import Datemenu from '@barmenu/datemenu';
 
 export default Widget.Window({
 	visible: MenuVis.bind('barmenu'),
@@ -11,7 +12,8 @@ export default Widget.Window({
 		class_name: 'BarMenuBox',
 		children: [
 			Notifications,
-			Widget.Separator({ orientation: 1 })
+			Widget.Separator({ orientation: 1 }),
+			Datemenu,
 		],
 		spacing: 5,
 	}),

@@ -10,4 +10,5 @@ window#barmenu .BarMenuBox {
 	border: 2px solid rgba(40, 40, 40, 25);
 
 	@import './notifications';
+	@import './datemenu.scss';
 }
