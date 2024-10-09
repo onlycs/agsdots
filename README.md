@@ -1,4 +1,4 @@
-# agsdots
+# gnyprlome
 
 My dotfiles for aylurs-gtk-shell (ags), basically recreating a hyprland-friendly version
 of gnome-shell.
