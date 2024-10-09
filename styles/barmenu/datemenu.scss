@@ -15,4 +15,63 @@
 			color: $TextDark;
 		}
 	}
+
+	.Calendar {
+		margin: 2rem 0.25rem 0 1rem;
+		min-width: 10rem;
+
+		.Header {
+			.Button {
+				@include Button();
+				background-color: transparent;
+			}
+
+			.Label {
+				font-size: 1.1rem;
+				font-weight: 600;
+			}
+		}
+
+		.WeekLabels {
+			margin-top: 0.5rem;
+			margin-bottom: 0.5rem;
+
+			.WeekLabel {
+				font-size: 0.8rem;
+				font-weight: 700;
+				color: $TextDark;
+
+				min-width: 24px;
+			}
+		}
+
+		.Weeks {
+			margin-top: 0.5rem;
+
+			.Week {
+				.Day {
+					@include Button();
+
+					background-color: transparent;
+					min-width: 24px;
+					margin: 4px;
+					padding: 4px;
+					border-radius: 2rem;
+
+					label {
+						font-size: 0.75rem;
+						font-weight: 600;
+					}
+
+					&.Gray {
+						color: $TextDark;
+					}
+
+					&.Today {
+						background-color: $SelectedBg;
+					}
+				}
+			}
+		}
+	}
 }

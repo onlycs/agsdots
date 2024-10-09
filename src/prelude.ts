@@ -10,7 +10,7 @@ export const RemoveClickClass = (self: AgsWidget<unknown>) => self.class_name = 
 
 export type EventHandler<Self> = (self: Self, event: Gdk.Event) => boolean | unknown;
 
-export function JoinHandlers<T>(a?: EventHandler<T>, b?: EventHandler<T> | Binding<any, any, EventHandler<T>>): EventHandler<T> | Binding<any, any, EventHandler<T>> {
+export function JoinHandlers<T, K>(a?: EventHandler<T>, b?: EventHandler<T> | Binding<any, any, EventHandler<T>>): EventHandler<T> | Binding<any, any, EventHandler<T>> {
 	if (b instanceof Binding) return b.transform(f => JoinHandlers(a, f) as EventHandler<T>);
 	else return (e, args) => {
 		a?.(e, args);

@@ -24,4 +24,9 @@ export const Moment = {
 			return Utils.exec('date +"%A"').trim();
 		}],
 	}),
+	Month: Variable('', {
+		poll: [1000, function () {
+			return Utils.exec('date +"%B"').trim();
+		}],
+	}),
 };

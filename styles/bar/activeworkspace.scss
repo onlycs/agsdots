@@ -17,7 +17,7 @@
 }
 
 .SliderSegment {
-	transition: all 0.1s linear;
+	transition: min-width 0.1s linear, background-color 0s linear;
 	background-color: $Text;
 	border-radius: 3px;
 	min-height: 6px;
