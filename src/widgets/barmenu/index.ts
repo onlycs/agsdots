@@ -13,6 +13,6 @@ export default Widget.Window({
 			Notifications,
 			Widget.Separator({ orientation: 1 })
 		],
-		spacing: 16,
+		spacing: 5,
 	}),
 });

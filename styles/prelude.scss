@@ -9,7 +9,7 @@
 .TextSub {
 	font-family: 'Cantarell';
 	font-size: smaller;
-	color: darken($Text, 50%);
+	color: $TextDark;
 }
 
 .TextLarge {

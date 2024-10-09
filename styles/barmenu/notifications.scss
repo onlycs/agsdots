@@ -4,7 +4,7 @@ $NotificationHeader: #969696;
 $Shadow: darken($BackdropBase, 5%);
 
 .NotificationsBox {
-	min-width: 28rem;
+	min-width: 30rem;
 
 	.Footer {
 		margin-top: 1rem;
@@ -14,6 +14,7 @@ $Shadow: darken($BackdropBase, 5%);
 
 			background-color: $Background;
 			min-width: 4rem;
+			margin-right: 1rem;
 		}
 
 		.DNDLabel {
@@ -23,7 +24,7 @@ $Shadow: darken($BackdropBase, 5%);
 	}
 
 	.Scrollbox {
-		min-width: 28rem;
+		min-width: 30rem;
 
 		undershoot.top {
 			background: linear-gradient(to top, transparentize($Shadow, 1), $Shadow)
@@ -33,15 +34,30 @@ $Shadow: darken($BackdropBase, 5%);
 			background: linear-gradient(to bottom, transparentize($Shadow, 1), $Shadow);
 		}
 
+		scrollbar,
+		scrollbar * {
+			all: unset;
+		}
+
+		scrollbar,
 		scrollbar:hover {
 			background-color: transparent;
 		}
 
 		scrollbar slider {
 			border: none;
+			min-width: 0.5rem;
+			background-color: $Scrollbar;
+			border-radius: 1rem;
 
 			&:hover {
 				min-width: 0.5rem;
+				background-color: $ScrollbarHover;
+			}
+
+			&:active {
+				min-width: 0.5rem;
+				background-color: $ScrollbarActive;
 			}
 		}
 	}
@@ -59,14 +75,14 @@ $Shadow: darken($BackdropBase, 5%);
 			}
 
 			.AppName {
-				font-size: 1rem;
+				font-size: 1.05rem;
 				color: $NotificationHeader;
 				font-weight: 600;
 				margin-right: 0.5rem;
 			}
 
 			.Timestamp {
-				font-size: 0.75rem;
+				font-size: 0.85rem;
 				color: $NotificationHeader;
 				font-weight: 400;
 				margin-top: 0.25rem;
@@ -83,12 +99,17 @@ $Shadow: darken($BackdropBase, 5%);
 			.Title {
 				@extend .TextMain;
 
-				font-size: 1.15rem;
+				font-size: 1.1rem;
 				font-weight: 500;
 			}
 
 			.Body {
 				@extend .TextMain;
+			}
+
+			.TextBox {
+				margin-left: 0.25rem;
+				margin-bottom: 0.2rem;
 			}
 		}
 
@@ -112,7 +133,19 @@ $Shadow: darken($BackdropBase, 5%);
 
 		.Close {
 			border-radius: 5rem;
-			padding: 0.25rem 0.5rem;
+			padding: 0rem 0.3rem;
+		}
+	}
+
+	.Fallback {
+		.Icon {
+			color: darken($Text, 75%);
+		}
+
+		.Label {
+			color: $TextDark;
+			font-weight: 800;
+			font-size: 1.5rem;
 		}
 	}
 }

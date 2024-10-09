@@ -3,6 +3,7 @@ $SelectedBg: darken(#3584e4, 20%);
 $SelectedBorder: darken($SelectedBg, 30%);
 
 $Text: #fff;
+$TextDark: darken($Text, 75%);
 $Link: lighten($SelectedBg, 20%);
 $LinkVisited: lighten($SelectedBg, 10%);
 

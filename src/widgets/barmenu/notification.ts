@@ -87,7 +87,7 @@ const Content = (n: Notification) => {
 		Widget.Box({
 			class_name: 'TextBox',
 			vertical: true,
-			spacing: 2,
+			spacing: 4,
 			children: textchildren,
 		}),
 	];
@@ -109,7 +109,7 @@ const NotificationWidget = (n: Notification) => Widget.Box({
 	name: `Notification-${n.id}`,
 	class_name: 'Notification',
 	vertical: true,
-	spacing: 12,
+	spacing: 8,
 	hexpand: false,
 	children: [
 		Widget.CenterBox({
@@ -131,16 +131,31 @@ const NotificationWidget = (n: Notification) => Widget.Box({
 	],
 });
 
-const NotificationFallback = () => Widget.Label({
-	label: 'No notifications',
-	class_name: 'NoNotifications',
+const NotificationFallback = () => Widget.Box({
+	halign: 3,
+	valign: 3,
 	vexpand: true,
+	vertical: true,
+	spacing: 24,
+	class_name: 'Fallback',
+	children: [
+		Widget.Icon({
+			icon: 'preferences-system-notifications-symbolic',
+			size: 96,
+			class_name: 'Icon',
+		}),
+		Widget.Label({
+			label: 'No Notifications',
+			class_name: 'Label',
+		}),
+	],
 });
 
 const NotificationList = (notifs: Notification[]) => Widget.Scrollable({
 	hscroll: 'never',
 	vexpand: true,
 	class_name: 'Scrollbox',
+	vscrollbar_policy: 1,
 	child: Widget.Box({
 		class_name: 'Notifications',
 		vertical: true,
@@ -169,7 +184,8 @@ const Footer = () => Widget.CenterBox({
 				label: 'Clear',
 				on_primary_click_release: () => NotifyService.Clear(),
 			})
-		]
+		],
+		setup: self => self.hook(NotifyService, (self) => self.visible = NotifyService.notifications.length > 0, 'notify'),
 	}),
 });
 
