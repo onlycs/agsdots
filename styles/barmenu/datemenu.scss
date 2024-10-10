@@ -26,9 +26,15 @@
 				background-color: transparent;
 			}
 
-			.Label {
-				font-size: 1.1rem;
-				font-weight: 600;
+			.LabelButton {
+				@include Button();
+				background-color: transparent;
+				min-width: 8.5rem;
+
+				label {
+					font-size: 1.1rem;
+					font-weight: 600;
+				}
 			}
 		}
 
@@ -69,6 +75,10 @@
 
 					&.Today {
 						background-color: $SelectedBg;
+					}
+
+					&.Selected:not(.Today) {
+						border: 1px solid $SelectedBg;
 					}
 				}
 			}

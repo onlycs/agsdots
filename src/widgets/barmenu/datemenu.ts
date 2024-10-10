@@ -28,7 +28,6 @@ const Date = () => {
 
 const Header = () => Widget.CenterBox({
 	class_name: 'Header',
-
 	start_widget: Widget.Box({
 		children: [
 			Button({
@@ -42,10 +41,10 @@ const Header = () => Widget.CenterBox({
 		]
 	}),
 
-	center_widget: Widget.Label({
-		label: CalService.bindings.monthYearText(),
-		class_name: 'Label',
-		hexpand: true,
+	center_widget: Button({
+		label: CalService.bind('header'),
+		class_name: 'LabelButton',
+		on_primary_click_release: () => CalService.datereset(),
 	}),
 
 	end_widget: Widget.Box({
@@ -80,15 +79,16 @@ const CalendarWeek = (week: CalendarWeek) => Widget.Box({
 	halign: 3,
 	children: week.days.map((day) => Button({
 		label: ZeroPadded(day.date),
-		class_name: `Day ${day.today ? 'Today' : ''} ${day.in_month ? '' : 'Gray'}`,
+		class_name: `Day ${day.today ? 'Today' : ''} ${day.in_month ? '' : 'Gray'} ${day.selected ? 'Selected' : ''}`,
 		halign: 3,
+		on_primary_click_release: () => CalService.toggleSelected(day.id),
 	})),
 });
 
 const Calendar = () => Widget.Box({
 	vertical: true,
 	class_name: 'Weeks',
-	children: CalService.bindings.month_obj().transform((weeks) => [WeekLabels(), ...weeks.map(CalendarWeek)]),
+	children: CalService.bind('data').transform((weeks) => [WeekLabels(), ...weeks.map(CalendarWeek)]),
 });
 
 export default Widget.Box({

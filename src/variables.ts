@@ -19,14 +19,19 @@ export const Moment = {
 			return Utils.exec('date +"%m/%d/%Y"').trim();
 		}],
 	}),
-	Dotw: Variable('', {
-		poll: [1000, function () {
-			return Utils.exec('date +"%A"').trim();
-		}],
-	}),
 	Month: Variable('', {
 		poll: [1000, function () {
 			return Utils.exec('date +"%B"').trim();
 		}],
 	}),
+	DateLabel: Variable('', {
+		poll: [1000, function () {
+			return Utils.exec('date +"%B %0d, %Y"').trim();
+		}],
+	}),
+	Dotw: Variable('', {
+		poll: [1000, function () {
+			return Utils.exec('date +"%A"').trim();
+		}]
+	})
 };

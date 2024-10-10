@@ -1,12 +1,11 @@
 const Months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
 
-const Month = Variable(parseInt(Utils.exec('date +%m')) - 1);
-const Year = Variable(parseInt(Utils.exec('date +%Y')));
-
 export interface CalendarDay {
+	id: string;
 	date: number;
 	today: boolean;
 	in_month: boolean;
+	selected: boolean;
 }
 
 export interface CalendarWeek {
@@ -14,12 +13,12 @@ export interface CalendarWeek {
 	woty: number;
 }
 
-function first_day(month: number, year: number) {
-	return new Date(year, month, 1).getDay();
+function makeid(day: number, month: number, year: number) {
+	return `${day}-${month}-${year}`;
 }
 
-function last_day(month: number, year: number) {
-	return new Date(year, month, days_in(month, year)).getDay();
+function first_day(month: number, year: number) {
+	return new Date(year, month, 1).getDay();
 }
 
 function days_in(month: number, year: number) {
@@ -29,7 +28,7 @@ function days_in(month: number, year: number) {
 	return new Date(year, month, 0).getDate();
 }
 
-function last_end(month: number, year: number): CalendarDay[] {
+function last_end(month: number, year: number, selected: string): CalendarDay[] {
 	const day = first_day(month, year);
 	const num_days = day == 0 ? 7 : day;
 	const prev_month_days = month == 0 ? days_in(11, year - 1) : days_in(month - 1, year);
@@ -38,36 +37,47 @@ function last_end(month: number, year: number): CalendarDay[] {
 	const days = [] as CalendarDay[];
 
 	for (let i = 0; i < num_days; i++) {
+		const id = month == 0 ? makeid(begin_day + i, 11, year - 1) : makeid(begin_day + i, month - 1, year);
+
 		days.push({
+			id,
 			date: begin_day + i,
 			today: false,
 			in_month: false,
+			selected: selected == id,
 		});
 	}
 
 	return days;
 }
 
-function all_days(month: number, year: number): CalendarDay[] {
-	const first = first_day(month, year);
-	const days = last_end(month, year);
+function all_days(month: number, year: number, selected: string): CalendarDay[] {
+	const days = last_end(month, year, selected);
 	const num_days = days_in(month, year);
 
 	for (let i = 1; i <= num_days; i++) {
+		const id = makeid(i, month, year);
+
 		days.push({
+			id,
 			date: i,
 			today: i == new Date().getDate() && month == new Date().getMonth() && year == new Date().getFullYear(),
 			in_month: true,
+			selected: selected == id,
 		});
 	}
 
 	const next_days = (6 * 7) - days.length;
 
 	for (let i = 1; i <= next_days; i++) {
+		const id = month == 11 ? makeid(i, 0, year + 1) : makeid(i, month + 1, year);
+
 		days.push({
+			id,
 			date: i,
 			today: false,
 			in_month: false,
+			selected: selected == id,
 		});
 	}
 
@@ -82,8 +92,8 @@ function first_woty(month: number, year: number): number {
 	return parseInt(first_woty);
 }
 
-function group_weeks(month: number, year: number): CalendarWeek[] {
-	const days = all_days(month, year);
+function group_weeks(month: number, year: number, selected: string): CalendarWeek[] {
+	const days = all_days(month, year, selected);
 	const weeks = [] as CalendarWeek[];
 	const woty = first_woty(month, year);
 
@@ -97,41 +107,73 @@ function group_weeks(month: number, year: number): CalendarWeek[] {
 	return weeks;
 }
 
-function generateCalendarMonth(month: number, year: number): CalendarWeek[] {
-	return group_weeks(month, year);
+function generateCalendarMonth(month: number, year: number, selected: string): CalendarWeek[] {
+	return group_weeks(month, year, selected);
 }
 
-export const CalService = {
-	bindings: {
-		monthText: () => Month.bind().transform((month) => Months[month]),
-		monthNum: () => Month.bind(),
-		monthYearText: () => Month.bind().transform((month) => {
-			if (Year.getValue() != new Date().getFullYear()) return `${Months[month]} ${Year.value}`;
-			else return Months[month];
-		}),
-		year: () => Year.bind(),
-		month_obj: () => Month.bind().transform((month) => generateCalendarMonth(month, Year.getValue())),
-	},
-	previous: () => {
-		const month = Month.getValue();
+class CalendarService extends Service {
+	static {
+		Service.register(
+			this,
+			{},
+			{
+				'selected': ['string', 'r'],
+				'data': ['gobject', 'r'],
+				'header': ['string', 'r'],
+			}
+		)
+	}
 
-		if (month == 0) {
-			Year.setValue(Year.getValue() - 1);
-			Month.setValue(11);
-			return;
-		}
+	#month: number = 0;
+	#year: number = 0;
+	#selected_val: string = '';
 
-		Month.setValue(month - 1);
-	},
-	next: () => {
-		const month = Month.getValue();
+	constructor() {
+		super();
+		this.datereset();
+	}
 
-		if (month == 11) {
-			Year.setValue(Year.getValue() + 1);
-			Month.setValue(0);
-			return;
-		}
+	#update() {
+		this.notify('selected');
+		this.notify('data');
+		this.notify('header');
+	}
 
-		Month.setValue(month + 1);
-	},
-};
+	get selected() {
+		return this.#selected_val || makeid(new Date().getDate(), new Date().getMonth(), new Date().getFullYear());
+	}
+
+	get data() {
+		return generateCalendarMonth(this.#month, this.#year, this.selected);
+	}
+
+	get header() {
+		if (this.#year == new Date().getFullYear()) return Months[this.#month];
+		else return `${Months[this.#month]}  ${this.#year}`;
+	}
+
+	previous() {
+		if (this.#month == 0) this.#month = 11, this.#year--;
+		else this.#month--;
+		this.#update();
+	}
+
+	next() {
+		if (this.#month == 11) this.#month = 0, this.#year++;
+		else this.#month++;
+		this.#update();
+	}
+
+	datereset() {
+		this.#month = new Date().getMonth();
+		this.#year = new Date().getFullYear();
+		this.#update();
+	}
+
+	toggleSelected(day: string) {
+		this.#selected_val = this.#selected_val == day ? '' : day;
+		this.#update();
+	}
+}
+
+export const CalService = new CalendarService();
