@@ -1,21 +1,12 @@
-$SelectedFg: #fff;
 $SelectedBg: darken(#3584e4, 20%);
-$SelectedBorder: darken($SelectedBg, 30%);
 
 $Text: #fff;
 $TextDark: darken($Text, 60%);
-$Link: lighten($SelectedBg, 20%);
-$LinkVisited: lighten($SelectedBg, 10%);
 
 $Foreground: #eeeeec;
 $Background: darken(desaturate(#3d3846, 100%), 4%);
 $Base: lighten(desaturate(#241f31, 100%), 2%);
 $Border: darken($Background, 10%);
-
-$InsensitiveFg: mix($Foreground, $Background, 50%);
-$InsensitiveBg: mix($Background, $Base, 60%);
-$InsensitiveBase: $Base;
-$InsensitiveBorder: mix($Border, $Background, 80%);
 
 $Scrollbar: darken(mix($Foreground, $Background, 60%), 25%);
 $ScrollbarHover: lighten($Scrollbar, 10%);
@@ -41,3 +32,5 @@ $BackdropBorder: mix($Foreground, $BackdropBg, 50%);
 $BackdropInsensitive: lighten($BackdropBg, 15%);
 $BackdropSelectedFg: $BackdropText;
 $BackdropSelectedBg: transparentize(desaturate($SelectedBg, 100%), 0.5);
+
+$Layer1: lighten($Background, 2%);

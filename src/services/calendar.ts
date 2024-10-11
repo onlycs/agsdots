@@ -1,6 +1,6 @@
 import { calendar_v3 } from "@googleapis/calendar";
 
-const Months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+export const Months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
 
 export interface CalendarDay {
 	id: string;

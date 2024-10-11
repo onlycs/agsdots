@@ -1,29 +1,5 @@
 import Button from '@components/button';
 import { type CalendarWeek, CalService } from '@services/calendar';
-import { Moment } from '@variables';
-
-const Date = () => {
-	const DayLabel = Widget.Label({
-		label: Moment.Dotw.bind(),
-		class_name: 'Dotw',
-		xalign: 0,
-	});
-
-	const DateLabel = Widget.Label({
-		label: Moment.FullDate.bind(),
-		class_name: 'FullDate',
-		xalign: 0,
-	})
-
-	return Widget.Box({
-		class_name: 'Date',
-		vertical: true,
-		children: [
-			DayLabel,
-			DateLabel,
-		]
-	});
-};
 
 const Header = () => Widget.CenterBox({
 	class_name: 'Header',
@@ -90,22 +66,13 @@ const Calendar = () => Widget.Box({
 	children: CalService.bind('data').transform((weeks) => [WeekLabels(), ...weeks.map(CalendarWeek)]),
 });
 
-export default Widget.Box({
-	class_name: 'DateMenu',
+export default () => Widget.Box({
+	class_name: 'Calendar',
+	hexpand: true,
 	vertical: true,
 	children: [
-		Date(),
-		Widget.Box({
-			class_name: 'Calendar',
-			hexpand: true,
-			vertical: true,
-			children: [
-				Header(),
-				Calendar(),
-			],
-		}),
-		Widget.Label({
-			label: CalService.bind('gcal').transform((gcal) => gcal?.events[0]?.summary || 'not yet'),
-		})
+		Header(),
+		Calendar(),
+
 	],
 });

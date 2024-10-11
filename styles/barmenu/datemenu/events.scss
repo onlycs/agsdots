@@ -1,0 +1,12 @@
+.EventsBox {
+	background-color: $Layer1;
+	margin: 1rem 0 0 calc(1rem - 4px);
+	padding: 1rem;
+	border-radius: 0.5rem;
+
+	.DayText {
+		font-size: 1.05rem;
+		font-weight: 600;
+		color: lighten($TextDark, 20%);
+	}
+}
