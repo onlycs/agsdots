@@ -7,10 +7,10 @@ import { AddClickClass, AddHoverClass, RemoveClickClass, RemoveHoverClass, type 
 
 
 export default function Button<Child extends Gtk.Widget, Attr = unknown>(props: ButtonProps<Child, Attr>): AgsButton<Child, Attr> {
-	const _hover: EventHandler<AgsButton<Child, Attr>> = self => AddHoverClass(self);
-	const _unhover: EventHandler<AgsButton<Child, Attr>> = self => RemoveHoverClass(self);
-	const _click: EventHandler<AgsButton<Child, Attr>> = self => AddClickClass(self);
-	const _unclick: EventHandler<AgsButton<Child, Attr>> = self => RemoveClickClass(self);
+	const _hover: EventHandler<AgsButton<Child, Attr>> = self => AddHoverClass(self as any);
+	const _unhover: EventHandler<AgsButton<Child, Attr>> = self => RemoveHoverClass(self as any);
+	const _click: EventHandler<AgsButton<Child, Attr>> = self => AddClickClass(self as any);
+	const _unclick: EventHandler<AgsButton<Child, Attr>> = self => RemoveClickClass(self as any);
 	const _setup = (self: AgsButton<Child, Attr>) => self.on('leave-notify-event', _unhover);
 
 	return Widget.Button({

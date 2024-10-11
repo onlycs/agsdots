@@ -132,3 +132,6 @@ dist
 /types
 /styles/*.css
 *.map
+
+oauth.json
+token.json

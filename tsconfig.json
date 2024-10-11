@@ -1,16 +1,31 @@
 {
 	"compilerOptions": {
-		"target": "ES2022",
-		"module": "ES2022",
+		// Enable latest features
 		"lib": [
-			"ES2022"
+			"ESNext",
 		],
+		"target": "ESNext",
+		"module": "ESNext",
+		"moduleDetection": "force",
+		// Bundler mode
+		"moduleResolution": "bundler",
+		"allowImportingTsExtensions": true,
+		"verbatimModuleSyntax": true,
+		"noEmit": true,
+		// Best practices
 		"strict": true,
-		"noImplicitAny": false,
-		"baseUrl": ".",
+		"skipLibCheck": true,
+		"noFallthroughCasesInSwitch": true,
+		// Some stricter flags (disabled by default)
+		"noUnusedLocals": false,
+		"noUnusedParameters": false,
+		"noPropertyAccessFromIndexSignature": false,
+		// GJS
 		"typeRoots": [
-			"./types"
+			"./types",
+			"./node_modules/@types"
 		],
+		// Paths
 		"paths": {
 			"@widgets/*": [
 				"./src/widgets/*"
@@ -33,8 +48,9 @@
 			"@prelude": [
 				"./src/prelude"
 			],
+			"types/*": [
+				"./types/*"
+			]
 		},
-		"skipLibCheck": true,
-		"moduleResolution": "Node"
 	}
 }

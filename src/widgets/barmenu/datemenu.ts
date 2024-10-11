@@ -1,5 +1,5 @@
 import Button from '@components/button';
-import { CalendarWeek, CalService } from '@services/calendar';
+import { type CalendarWeek, CalService } from '@services/calendar';
 import { Moment } from '@variables';
 
 const Date = () => {

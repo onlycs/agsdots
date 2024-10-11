@@ -185,7 +185,7 @@ class CalendarService extends Service {
 		this.notify('gcal');
 
 		const date = makedate(this.selected);
-		const command = `nu -c 'cd ${App.configDir}/src-desktop; echo "${date.toISOString()}" | bun run --silent start'`;
+		const command = `nu -c 'cd ${App.configDir}; echo "${date.toISOString()}" | bun run --silent gcal'`;
 
 		Utils.execAsync(command)
 			.then(JSON.parse)

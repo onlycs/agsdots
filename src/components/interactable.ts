@@ -6,10 +6,10 @@ import { type EventBoxProps } from 'types/widgets/eventbox';
 import { type EventHandler, AddClickClass, AddHoverClass, RemoveClickClass, RemoveHoverClass, JoinHandlers } from '@prelude';
 
 export default function Interactable<Child extends Gtk.Widget & Widget<Attr>, Attr = unknown>(props: EventBoxProps<Child, Attr>): EventBox<Child, Attr> {
-	const _hover: EventHandler<EventBox<Child, Attr>> = self => AddHoverClass(self.child);
-	const _unhover: EventHandler<EventBox<Child, Attr>> = self => RemoveHoverClass(self.child);
-	const _click: EventHandler<EventBox<Child, Attr>> = self => AddClickClass(self.child);
-	const _unclick: EventHandler<EventBox<Child, Attr>> = self => RemoveClickClass(self.child); 
+	const _hover: EventHandler<EventBox<Child, Attr>> = self => AddHoverClass(self.child as any);
+	const _unhover: EventHandler<EventBox<Child, Attr>> = self => RemoveHoverClass(self.child as any);
+	const _click: EventHandler<EventBox<Child, Attr>> = self => AddClickClass(self.child as any);
+	const _unclick: EventHandler<EventBox<Child, Attr>> = self => RemoveClickClass(self.child as any);
 	const _setup = (self: EventBox<Child, Attr>) => self.on('leave-notify-event', _unhover);
 
 	return Widget.EventBox({

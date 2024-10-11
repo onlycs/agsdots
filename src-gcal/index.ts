@@ -3,6 +3,7 @@ import { authenticate } from '@google-cloud/local-auth';
 import { google } from 'googleapis';
 import { OAuth2Client } from 'google-auth-library';
 import type { JSONClient } from 'google-auth-library/build/src/auth/googleauth';
+import { BatchServiceClient } from '@google-cloud/batch';
 
 dotenv.config();
 
@@ -84,11 +85,11 @@ async function list(client: any) {
 	if (!ids) return;
 
 	// list events for each calendar
-	const events = [];
+	const requests = [];
 	for (const id of ids) {
 		if (!id) continue;
 
-		const res = await cal.events.list({
+		const req = cal.events.list({
 			calendarId: id,
 			timeMin: date.toISOString(),
 			timeMax: end.toISOString(),
@@ -96,9 +97,11 @@ async function list(client: any) {
 			orderBy: 'startTime',
 		});
 
-		if (!res.data.items) continue;
-		events.push(...res.data.items);
+		requests.push(req);
 	}
+
+	const responses = await Promise.all(requests);
+	const events = responses.flatMap(res => res.data.items).filter(n => !!n);
 
 	console.log(JSON.stringify({
 		date,
