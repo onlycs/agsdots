@@ -1,4 +1,6 @@
 .DateMenu {
+	margin-left: calc(1rem - 4px);
+
 	@import './date';
 	@import './calendar';
 	@import './events';
