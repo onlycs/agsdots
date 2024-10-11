@@ -186,10 +186,12 @@ class CalendarService extends Service {
 
 		const date = makedate(this.selected);
 		const command = `nu -c 'cd ${App.configDir}; echo "${date.toISOString()}" | bun run --silent gcal'`;
+		const selected_clone = this.selected;
 
 		Utils.execAsync(command)
 			.then(JSON.parse)
 			.then((data: GCalResponse) => {
+				if (selected_clone != this.selected) return;
 				this.#gcal_val = data;
 				this.notify('gcal');
 			})
