@@ -1,3 +1,5 @@
+import { calendar_v3 } from "@googleapis/calendar";
+
 const Months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
 
 export interface CalendarDay {
@@ -15,6 +17,19 @@ export interface CalendarWeek {
 
 function makeid(day: number, month: number, year: number) {
 	return `${day}-${month}-${year}`;
+}
+
+function makeidfromdate(date: Date) {
+	return makeid(date.getDate(), date.getMonth(), date.getFullYear());
+}
+
+function todayId() {
+	return makeidfromdate(new Date());
+}
+
+export function makedate(id: string): Date {
+	const [day, month, year] = id.split('-').map(Number);
+	return new Date(year, month, day);
 }
 
 function first_day(month: number, year: number) {
@@ -111,6 +126,12 @@ function generateCalendarMonth(month: number, year: number, selected: string): C
 	return group_weeks(month, year, selected);
 }
 
+export interface GCalResponse {
+	date: Date,
+	events: calendar_v3.Schema$Event[],
+	cals: calendar_v3.Schema$CalendarListEntry[],
+}
+
 class CalendarService extends Service {
 	static {
 		Service.register(
@@ -120,27 +141,23 @@ class CalendarService extends Service {
 				'selected': ['string', 'r'],
 				'data': ['gobject', 'r'],
 				'header': ['string', 'r'],
+				'gcal': ['gobject', 'r'],
 			}
 		)
 	}
 
 	#month: number = 0;
 	#year: number = 0;
-	#selected_val: string = '';
+	#selected_val: string = todayId();
+	#gcal_val: GCalResponse | undefined = undefined;
 
 	constructor() {
 		super();
 		this.datereset();
 	}
 
-	#update() {
-		this.notify('selected');
-		this.notify('data');
-		this.notify('header');
-	}
-
 	get selected() {
-		return this.#selected_val || makeid(new Date().getDate(), new Date().getMonth(), new Date().getFullYear());
+		return this.#selected_val;
 	}
 
 	get data() {
@@ -152,27 +169,74 @@ class CalendarService extends Service {
 		else return `${Months[this.#month]}  ${this.#year}`;
 	}
 
+	get gcal() {
+		return this.#gcal_val
+	}
+
+	#defaultselect() {
+		if (new Date().getMonth() == this.#month) this.#selected_val = makeidfromdate(new Date());
+		else this.#selected_val = `1-${this.#month}-${this.#year}`
+
+		this.#onSelectChange();
+	}
+
+	#updateGcal() {
+		this.#gcal_val = undefined;
+		this.notify('gcal');
+
+		const date = makedate(this.selected);
+		const command = `nu -c 'cd ${App.configDir}/src-desktop; echo "${date.toISOString()}" | bun run --silent start'`;
+
+		Utils.execAsync(command)
+			.then(JSON.parse)
+			.then((data: GCalResponse) => {
+				this.#gcal_val = data;
+				this.notify('gcal');
+			})
+			.catch((error) => {
+				console.error(error);
+			});
+	}
+
+	#onSelectChange() {
+		this.notify('selected');
+		this.notify('data');
+		this.#updateGcal();
+	}
+
+	#onMonthChange() {
+		this.#defaultselect();
+		this.notify('header');
+		this.notify('data');
+	}
+
 	previous() {
 		if (this.#month == 0) this.#month = 11, this.#year--;
 		else this.#month--;
-		this.#update();
+
+		this.#onMonthChange();
 	}
 
 	next() {
 		if (this.#month == 11) this.#month = 0, this.#year++;
 		else this.#month++;
-		this.#update();
+
+		this.#onMonthChange();
 	}
 
 	datereset() {
 		this.#month = new Date().getMonth();
 		this.#year = new Date().getFullYear();
-		this.#update();
+
+		this.#onMonthChange();
 	}
 
-	toggleSelected(day: string) {
-		this.#selected_val = this.#selected_val == day ? '' : day;
-		this.#update();
+	select(day: string) {
+		if (day == todayId() && this.#selected_val == todayId()) return;
+		else if (day == this.#selected_val) return this.#defaultselect();
+		else this.#selected_val = day;
+
+		this.#onSelectChange();
 	}
 }
 

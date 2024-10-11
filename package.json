@@ -6,13 +6,20 @@
 		"@girs/accountsservice-1.0": "^1.0.0-3.2.7",
 		"@typescript-eslint/eslint-plugin": ">=7.0.2",
 		"@typescript-eslint/parser": ">=7.0.2",
-		"typescript": "^5.4.5",
-		"eslint": "8.56.0"
+		"eslint": "8.56.0",
+		"typescript": "^5.4.5"
 	},
 	"scripts": {
 		"lint": "eslint . --fix",
 		"start": "ags -c ./config.js",
-		"watch": "nodemon -w . --exec 'bun start' --ext js,ts"
+		"watch": "nodemon -w ./src --exec 'bun start' --ext js,ts"
 	},
-	"sourceType": "module"
+	"sourceType": "module",
+	"dependencies": {
+		"@googleapis/calendar": "^9.7.9",
+		"@types/bun": "latest",
+		"dotenv": "^16.4.5"
+	},
+	"module": "index.ts",
+	"type": "module"
 }

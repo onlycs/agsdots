@@ -1,5 +1,4 @@
 import Button from '@components/button';
-import Interactable from '@components/interactable';
 import { CalendarWeek, CalService } from '@services/calendar';
 import { Moment } from '@variables';
 
@@ -81,7 +80,7 @@ const CalendarWeek = (week: CalendarWeek) => Widget.Box({
 		label: ZeroPadded(day.date),
 		class_name: `Day ${day.today ? 'Today' : ''} ${day.in_month ? '' : 'Gray'} ${day.selected ? 'Selected' : ''}`,
 		halign: 3,
-		on_primary_click_release: () => CalService.toggleSelected(day.id),
+		on_primary_click_release: () => CalService.select(day.id),
 	})),
 });
 
@@ -105,5 +104,8 @@ export default Widget.Box({
 				Calendar(),
 			],
 		}),
+		Widget.Label({
+			label: CalService.bind('gcal').transform((gcal) => gcal?.events[0]?.summary || 'not yet'),
+		})
 	],
 });

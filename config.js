@@ -4,6 +4,7 @@ await Utils.execAsync([
 	'--external', 'resource://*',
 	'--external', 'gi://*',
 	'--external', 'file://*',
+	'--env-file', `${App.configDir}/.env`,
 ]); 
 
 await import('file:///tmp/ags/main.js');
