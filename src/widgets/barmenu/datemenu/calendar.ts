@@ -73,6 +73,5 @@ export default () => Widget.Box({
 	children: [
 		Header(),
 		Calendar(),
-
 	],
 });

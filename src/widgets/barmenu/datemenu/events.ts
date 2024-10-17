@@ -1,4 +1,6 @@
-import { CalService, makedate, Months } from "@services/calendar";
+import { CalService, makedate, Months, type CalendarResponse } from "@services/calendar";
+import type { calendar_v3 } from "googleapis";
+import type { Binding } from "types/service";
 
 const CalculateDayText = (id: string) => {
 	const today = new Date();
@@ -31,10 +33,31 @@ const DayText = () => Widget.Label({
 	xalign: 0,
 });
 
+const Events = (cal: CalendarResponse) => {
+	const calendars = cal.events;
+	const events: Array<calendar_v3.Schema$Event & { color: string }> = [];
+
+	for (const color in calendars) {
+		const evdata = calendars[color].items!;
+		if (evdata.length == 0) continue;
+
+		const colored = evdata.map(ev => ({ ...ev, color }));
+		events.push(...colored);
+	}
+
+	return events.map(ev =>
+		Widget.Label({
+			label: ev.color,
+			class_name: 'EventsHeader',
+		})
+	);
+};
+
 export default () => Widget.Box({
 	class_name: 'EventsBox',
 	vertical: true,
-	children: [
+	children: CalService.bind('gcal').transform(cal => [
 		DayText(),
-	]
+		...(cal ? Events(cal) : [Widget.Spinner()] as any),
+	])
 });

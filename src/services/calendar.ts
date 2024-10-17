@@ -1,4 +1,6 @@
 import { calendar_v3 } from "@googleapis/calendar";
+import type { CalendarResponse } from "../../src-gcal/response.ts";
+export type { CalendarResponse } from '../../src-gcal/response.ts';
 
 export const Months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
 
@@ -126,12 +128,6 @@ function generateCalendarMonth(month: number, year: number, selected: string): C
 	return group_weeks(month, year, selected);
 }
 
-export interface GCalResponse {
-	date: Date,
-	events: calendar_v3.Schema$Event[],
-	cals: calendar_v3.Schema$CalendarListEntry[],
-}
-
 class CalendarService extends Service {
 	static {
 		Service.register(
@@ -149,7 +145,7 @@ class CalendarService extends Service {
 	#month: number = 0;
 	#year: number = 0;
 	#selected_val: string = todayId();
-	#gcal_val: GCalResponse | undefined = undefined;
+	#gcal_val: CalendarResponse | undefined = undefined;
 
 	constructor() {
 		super();
@@ -190,7 +186,7 @@ class CalendarService extends Service {
 
 		Utils.execAsync(command)
 			.then(JSON.parse)
-			.then((data: GCalResponse) => {
+			.then((data: CalendarResponse) => {
 				if (selected_clone != this.selected) return;
 				this.#gcal_val = data;
 				this.notify('gcal');

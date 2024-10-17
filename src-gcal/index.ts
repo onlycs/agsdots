@@ -3,7 +3,8 @@ import { authenticate } from '@google-cloud/local-auth';
 import { google } from 'googleapis';
 import { OAuth2Client } from 'google-auth-library';
 import type { JSONClient } from 'google-auth-library/build/src/auth/googleauth';
-import { BatchServiceClient } from '@google-cloud/batch';
+import type { CalendarResponse } from './response';
+import type { calendar_v3 } from '@googleapis/calendar';
 
 dotenv.config();
 
@@ -52,6 +53,10 @@ async function authorize(): Promise<JSONClient | OAuth2Client> {
 	return client;
 }
 
+function defined<T>(item: T | null | undefined): item is T {
+	return item !== null && item !== undefined;
+}
+
 async function list(client: any) {
 	// get selected day from stdin
 	let line;
@@ -79,16 +84,16 @@ async function list(client: any) {
 	const cal = google.calendar({ version: 'v3', auth: client });
 
 	// list calendar ids
-	const cals_res = await cal.calendarList.list();
-	const cals = cals_res.data.items;
-	const ids = cals?.filter(cal => cal.selected).map((item) => item.id);
-	if (!ids) return;
+	const calendars = await cal.calendarList.list();
+	const good_calendars = calendars.data.items?.filter(c => c.selected && defined(c.id) && defined(c.backgroundColor));
+	const ids = good_calendars?.map(c => c.id).filter(defined);
+	const colors = good_calendars?.map(c => c.backgroundColor).filter(defined);
 
-	// list events for each calendar
+	if (!ids) return;
+	if (!colors) return;
+
 	const requests = [];
 	for (const id of ids) {
-		if (!id) continue;
-
 		const req = cal.events.list({
 			calendarId: id,
 			timeMin: date.toISOString(),
@@ -101,13 +106,13 @@ async function list(client: any) {
 	}
 
 	const responses = await Promise.all(requests);
-	const events = responses.flatMap(res => res.data.items).filter(n => !!n);
-
-	console.log(JSON.stringify({
+	const events = responses.filter(r => defined(r.data.items)).map((r, i) => [colors[i], r.data])
+	const response: CalendarResponse = {
 		date,
-		events,
-		cals
-	}, null, 2));
+		events: Object.fromEntries(events),
+	};
+
+	console.log(JSON.stringify(response, null, 2));
 }
 
 async function main() {
