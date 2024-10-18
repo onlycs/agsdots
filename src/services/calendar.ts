@@ -1,5 +1,4 @@
-import { calendar_v3 } from "@googleapis/calendar";
-import type { CalendarResponse } from "../../src-gcal/response.ts";
+import type { CalendarResponse } from '../../src-gcal/response.ts';
 export type { CalendarResponse } from '../../src-gcal/response.ts';
 
 export const Months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
@@ -21,12 +20,12 @@ function makeid(day: number, month: number, year: number) {
 	return `${day}-${month}-${year}`;
 }
 
-function makeidfromdate(date: Date) {
+function idfromdate(date: Date) {
 	return makeid(date.getDate(), date.getMonth(), date.getFullYear());
 }
 
-function todayId() {
-	return makeidfromdate(new Date());
+function today_id() {
+	return idfromdate(new Date());
 }
 
 export function makedate(id: string): Date {
@@ -109,7 +108,7 @@ function first_woty(month: number, year: number): number {
 	return parseInt(first_woty);
 }
 
-function group_weeks(month: number, year: number, selected: string): CalendarWeek[] {
+function generate_month(month: number, year: number, selected: string): CalendarWeek[] {
 	const days = all_days(month, year, selected);
 	const weeks = [] as CalendarWeek[];
 	const woty = first_woty(month, year);
@@ -124,28 +123,25 @@ function group_weeks(month: number, year: number, selected: string): CalendarWee
 	return weeks;
 }
 
-function generateCalendarMonth(month: number, year: number, selected: string): CalendarWeek[] {
-	return group_weeks(month, year, selected);
-}
-
 class CalendarService extends Service {
 	static {
 		Service.register(
 			this,
 			{},
 			{
-				'selected': ['string', 'r'],
-				'data': ['gobject', 'r'],
-				'header': ['string', 'r'],
-				'gcal': ['gobject', 'r'],
-			}
-		)
+				selected: ['string', 'r'],
+				data: ['gobject', 'r'],
+				header: ['string', 'r'],
+				gcal: ['gobject', 'r'],
+			},
+		);
 	}
 
-	#month: number = 0;
-	#year: number = 0;
-	#selected_val: string = todayId();
+	#month = 0;
+	#year = 0;
+	#selected_val: string = today_id();
 	#gcal_val: CalendarResponse | undefined = undefined;
+	#gcal_cache = new Map<string, [Date, CalendarResponse]>();
 
 	constructor() {
 		super();
@@ -157,7 +153,7 @@ class CalendarService extends Service {
 	}
 
 	get data() {
-		return generateCalendarMonth(this.#month, this.#year, this.selected);
+		return generate_month(this.#month, this.#year, this.selected);
 	}
 
 	get header() {
@@ -166,19 +162,36 @@ class CalendarService extends Service {
 	}
 
 	get gcal() {
-		return this.#gcal_val
+		return this.#gcal_val;
 	}
 
-	#defaultselect() {
-		if (new Date().getMonth() == this.#month) this.#selected_val = makeidfromdate(new Date());
-		else this.#selected_val = `1-${this.#month}-${this.#year}`
+	#reselect() {
+		if (new Date().getMonth() == this.#month) this.#selected_val = idfromdate(new Date());
+		else this.#selected_val = `1-${this.#month}-${this.#year}`;
 
-		this.#onSelectChange();
+		this.#on_day_change();
 	}
 
-	#updateGcal() {
+	#try_cache(): CalendarResponse | undefined {
+		const cache = this.#gcal_cache.get(this.selected);
+
+		if (cache) {
+			const [date, data] = cache;
+			if (date.getDate() == new Date().getDate()) return data;
+		}
+	}
+
+	#update_gcal() {
 		this.#gcal_val = undefined;
 		this.notify('gcal');
+
+		const cache = this.#try_cache();
+
+		if (cache) {
+			this.#gcal_val = cache;
+			this.notify('gcal');
+			return;
+		}
 
 		const date = makedate(this.selected);
 		const command = `nu -c 'cd ${App.configDir}; echo "${date.toISOString()}" | bun run --silent gcal'`;
@@ -196,14 +209,14 @@ class CalendarService extends Service {
 			});
 	}
 
-	#onSelectChange() {
+	#on_day_change() {
 		this.notify('selected');
 		this.notify('data');
-		this.#updateGcal();
+		this.#update_gcal();
 	}
 
-	#onMonthChange() {
-		this.#defaultselect();
+	#on_month_change() {
+		this.#reselect();
 		this.notify('header');
 		this.notify('data');
 	}
@@ -212,29 +225,36 @@ class CalendarService extends Service {
 		if (this.#month == 0) this.#month = 11, this.#year--;
 		else this.#month--;
 
-		this.#onMonthChange();
+		this.#on_month_change();
 	}
 
 	next() {
 		if (this.#month == 11) this.#month = 0, this.#year++;
 		else this.#month++;
 
-		this.#onMonthChange();
+		this.#on_month_change();
 	}
 
 	datereset() {
 		this.#month = new Date().getMonth();
 		this.#year = new Date().getFullYear();
 
-		this.#onMonthChange();
+		this.#on_month_change();
 	}
 
 	select(day: string) {
-		if (day == todayId() && this.#selected_val == todayId()) return;
-		else if (day == this.#selected_val) return this.#defaultselect();
-		else this.#selected_val = day;
+		if (day == today_id() && this.#selected_val == today_id()) return;
+		else if (day == this.#selected_val) {
+			this.#reselect();
+			return;
+		} else this.#selected_val = day;
 
-		this.#onSelectChange();
+		this.#on_day_change();
+	}
+
+	force_refresh() {
+		this.#gcal_cache.clear();
+		this.#update_gcal();
 	}
 }
 

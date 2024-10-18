@@ -32,6 +32,6 @@ export const Moment = {
 	Dotw: Variable('', {
 		poll: [1000, function () {
 			return Utils.exec('date +"%A"').trim();
-		}]
-	})
+		}],
+	}),
 };

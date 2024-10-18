@@ -21,5 +21,5 @@ export default Interactable({
 		],
 		class_name: 'BarElement DateTimeBox',
 	}),
-	on_primary_click_release: () => MenuVis.set('barmenu'),
+	on_primary_click_release: () => { MenuVis.set('barmenu'); },
 });

@@ -3,12 +3,12 @@ import ImageFromUrl from '@services/image';
 import Button from '@components/button';
 import GLib from 'gi://GLib';
 
-import { Notification } from 'resource:///com/github/Aylur/ags/service/notifications.js';
+import type { Notification } from 'resource:///com/github/Aylur/ags/service/notifications.js';
 import DNDManager from '@services/dnd';
 
 const NotifyService = await Service.import('notifications');
 
-const hasNotifications = () => NotifyService.notifications.length > 0;
+const has_notifications = () => NotifyService.notifications.length > 0;
 
 const RelTime = (utime: number) => {
 	const time = GLib.DateTime.new_from_unix_local(utime);
@@ -16,11 +16,11 @@ const RelTime = (utime: number) => {
 	const diffus = now.difference(time);
 	const diff = diffus / 1000000;
 
-	const DiffTimes: [number, (d: number) => string][] = [
-		[60, (_) => 'Just now'],
-		[3600, (d) => `${Math.floor(d / 60)}m ago`],
-		[86400, (d) => `${Math.floor(d / 3600)}h ago`],
-		[-1, (d) => `${Math.floor(d / 86400)}d ago`],
+	const DiffTimes: Array<[number, (d: number) => string]> = [
+		[60, _ => 'Just now'],
+		[3600, d => `${Math.floor(d / 60)}m ago`],
+		[86400, d => `${Math.floor(d / 3600)}h ago`],
+		[-1, d => `${Math.floor(d / 86400)}d ago`],
 	];
 
 	for (const [limit, fmt] of DiffTimes)
@@ -44,7 +44,7 @@ const Header = (n: Notification) => Widget.Box({
 			label: RelTime(n.time),
 			class_name: 'Timestamp',
 		}),
-	]
+	],
 });
 
 const Actions = (n: Notification) => Widget.Box({
@@ -53,8 +53,8 @@ const Actions = (n: Notification) => Widget.Box({
 		label: a.label,
 		class_name: 'Action',
 		hexpand: false,
-		on_primary_click_release: () => NotifyService.InvokeAction(n.id, a.id),
-	}))
+		on_primary_click_release: () => { NotifyService.InvokeAction(n.id, a.id); },
+	})),
 });
 
 const Close = (n: Notification) => Widget.Button({
@@ -63,7 +63,7 @@ const Close = (n: Notification) => Widget.Button({
 		size: 16,
 	}),
 	class_name: 'Close',
-	on_primary_click_release: () => NotifyService.CloseNotification(n.id),
+	on_primary_click_release: () => { NotifyService.CloseNotification(n.id); },
 });
 
 const Content = (n: Notification) => {
@@ -83,7 +83,7 @@ const Content = (n: Notification) => {
 			wrap: true,
 			hpack: 'start',
 			justification: 'fill',
-		})
+		}),
 	);
 
 	const children: any[] = [
@@ -99,7 +99,7 @@ const Content = (n: Notification) => {
 		class_name: 'Image',
 		icon: ImageFromUrl(n.image),
 		size: 64,
-		vpack: 'start'
+		vpack: 'start',
 	}));
 
 	return Widget.Box({
@@ -130,7 +130,7 @@ const NotificationWidget = (n: Notification) => Widget.Box({
 			n.actions.length > 0
 				? [Actions(n)]
 				: []
-		)
+		),
 	],
 });
 
@@ -190,9 +190,9 @@ const Footer = () => Widget.CenterBox({
 			Button({
 				class_name: 'Button',
 				label: 'Clear',
-				on_primary_click_release: () => NotifyService.Clear(),
-				setup: self => self.hook(NotifyService, (self) => self.visible = hasNotifications(), 'notify')
-			})
+				on_primary_click_release: () => { NotifyService.Clear(); },
+				setup: self => self.hook(NotifyService, self => self.visible = has_notifications(), 'notify'),
+			}),
 		],
 	}),
 });
@@ -204,7 +204,7 @@ export default Widget.Box({
 		Widget.Box({
 			children: [] as any[],
 			halign: 3,
-			setup: self => {
+			setup: (self) => {
 				self.hook(NotifyService, (self) => {
 					if (NotifyService.notifications.length == 0) {
 						self.children = [NotificationFallback()];
@@ -212,8 +212,8 @@ export default Widget.Box({
 						self.children = [NotificationList(NotifyService.notifications)];
 					}
 				}, 'notify');
-			}
+			},
 		}),
 		Footer(),
-	]
+	],
 });

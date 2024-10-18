@@ -17,8 +17,8 @@ Utils.execAsync(
 			'/tmp/ags/index.css',
 		],
 		'--ext', 'scss',
-	]
-);
+	],
+).catch(console.error);
 
 App.config({
 	windows: [Bar, BarMenu, ClickOff],

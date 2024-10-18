@@ -1,8 +1,8 @@
-import EventBox from 'resource:///com/github/Aylur/ags/widgets/eventbox.js';
-import Gtk from 'gi://Gtk?version=3.0';
+import type EventBox from 'resource:///com/github/Aylur/ags/widgets/eventbox.js';
+import type Gtk from 'gi://Gtk?version=3.0';
 
-import { type Widget } from 'types/widgets/widget';
-import { type EventBoxProps } from 'types/widgets/eventbox';
+import type { Widget } from 'types/widgets/widget';
+import type { EventBoxProps } from 'types/widgets/eventbox';
 import { type EventHandler, AddClickClass, AddHoverClass, RemoveClickClass, RemoveHoverClass, JoinHandlers } from '@prelude';
 
 export default function Interactable<Child extends Gtk.Widget & Widget<Attr>, Attr = unknown>(props: EventBoxProps<Child, Attr>): EventBox<Child, Attr> {
@@ -18,7 +18,7 @@ export default function Interactable<Child extends Gtk.Widget & Widget<Attr>, At
 		on_hover_lost: JoinHandlers(_unhover, props.on_hover_lost),
 		on_primary_click: JoinHandlers(_click, props.on_primary_click),
 		on_primary_click_release: JoinHandlers(_unclick, props.on_primary_click_release),
-		setup: self => {
+		setup: (self) => {
 			_setup(self);
 			props.setup?.(self);
 		},

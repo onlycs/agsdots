@@ -1,10 +1,9 @@
 import * as dotenv from 'dotenv';
 import { authenticate } from '@google-cloud/local-auth';
 import { google } from 'googleapis';
-import { OAuth2Client } from 'google-auth-library';
+import type { OAuth2Client } from 'google-auth-library';
 import type { JSONClient } from 'google-auth-library/build/src/auth/googleauth';
 import type { CalendarResponse } from './response';
-import type { calendar_v3 } from '@googleapis/calendar';
 
 dotenv.config();
 
@@ -12,14 +11,14 @@ const SCOPES = ['https://www.googleapis.com/auth/calendar.readonly'];
 const TOKEN_PATH = 'token.json';
 const KEYFILE = 'oauth.json';
 
-async function loadSaved() {
+async function load_saved(): Promise<JSONClient | undefined> {
 	try {
 		const token = Bun.file(TOKEN_PATH);
 		const str = await token.text();
 		const json = JSON.parse(str);
 		return google.auth.fromJSON(json);
-	} catch (e) {
-		return null;
+	} catch (_) {
+		return undefined;
 	}
 }
 
@@ -41,7 +40,7 @@ async function save(client: OAuth2Client) {
 }
 
 async function authorize(): Promise<JSONClient | OAuth2Client> {
-	const saved = await loadSaved();
+	const saved = await load_saved();
 	if (saved) return saved;
 
 	const client = await authenticate({
@@ -49,7 +48,7 @@ async function authorize(): Promise<JSONClient | OAuth2Client> {
 		keyfilePath: KEYFILE,
 	});
 
-	if (client.credentials) await save(client);
+	await save(client);
 	return client;
 }
 
@@ -59,7 +58,7 @@ function defined<T>(item: T | null | undefined): item is T {
 
 async function list(client: any) {
 	// get selected day from stdin
-	let line;
+	let line = '';
 	for await (const input of console) {
 		line = input.trim();
 		break;
@@ -106,7 +105,7 @@ async function list(client: any) {
 	}
 
 	const responses = await Promise.all(requests);
-	const events = responses.filter(r => defined(r.data.items)).map((r, i) => [colors[i], r.data])
+	const events = responses.filter(r => defined(r.data.items)).map((r, i) => [colors[i], r.data]);
 	const response: CalendarResponse = {
 		date,
 		events: Object.fromEntries(events),

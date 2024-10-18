@@ -3,7 +3,7 @@ import Interactable from '@components/interactable';
 const Hyprland = await Service.import('hyprland');
 
 const ClassTitleOverrides: Record<string, (title: string) => string> = {
-	'kitty': (_) => 'Terminal',
+	'kitty': _ => 'Terminal',
 	'code-url-handler': title => title.replace('Visual Studio Code', 'VSCode'),
 	'firefox': title => title.replace('Mozilla Firefox', 'Firefox'),
 	'': _ => 'Desktop',
@@ -32,7 +32,6 @@ function ClassTransformer(classname: string): string {
 	return classname;
 }
 
-
 export default Interactable({
 	child: Widget.Box({
 		children: [
@@ -51,5 +50,5 @@ export default Interactable({
 		],
 		vertical: true,
 		class_name: 'BarElement ActiveWindow',
-	})
+	}),
 });
