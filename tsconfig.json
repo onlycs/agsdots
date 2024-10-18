@@ -23,7 +23,7 @@
 		// GJS
 		"typeRoots": [
 			"./types",
-			"./node_modules/@types"
+			"./node_modules/@types",
 		],
 		// Paths
 		"paths": {
