@@ -1,12 +1,32 @@
-.EventsBox {
-	background-color: $Layer1;
+.Events {
+	@include Button($Layer1);
+
 	margin-top: 1rem;
-	padding: 1rem;
 	border-radius: 0.5rem;
+	padding: 1rem;
 
 	.DayText {
 		font-size: 1.05rem;
 		font-weight: 600;
 		color: lighten($TextDark, 20%);
+		margin-bottom: 0.25rem;
+	}
+
+	.Event {
+		margin-top: 0.25rem;
+
+		.VPill {
+			min-width: 0.25rem;
+			border-radius: 0.25rem;
+			margin-right: 0.5rem;
+		}
+
+		.Time {
+			color: darken($Text, 15%);
+		}
+
+		.Summary {
+			font-weight: 600;
+		}
 	}
 }

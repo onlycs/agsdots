@@ -1,14 +1,14 @@
 @import '../colors';
 
 @mixin BarHoverable() {
+	transition: all 0.05s ease;
+
 	&.Hover {
 		background-color: transparentize($Foreground, 0.9);
 	}
 }
 
 @mixin BarClickable() {
-	transition: all 0.05s ease;
-
 	&.Click {
 		background-color: darken(transparentize($Foreground, 0.9), 10%);
 	}

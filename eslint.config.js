@@ -58,6 +58,8 @@ export default [
 			// disable eslint rules that are already covered by tseslint
 			"no-unused-vars": "off",
 			"no-unused-expressions": "off",
+			"no-useless-constructor": "off",
+			"no-empty-function": "off",
 
 			"@typescript-eslint/array-type": ["warn", { default: 'array-simple' }],
 			"@typescript-eslint/await-thenable": "error",

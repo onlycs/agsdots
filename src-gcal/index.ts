@@ -56,7 +56,7 @@ function defined<T>(item: T | null | undefined): item is T {
 	return item !== null && item !== undefined;
 }
 
-async function list(client: any) {
+async function list(client: JSONClient | OAuth2Client) {
 	// get selected day from stdin
 	let line = '';
 	for await (const input of console) {
@@ -80,7 +80,7 @@ async function list(client: any) {
 	end.setHours(23, 59, 59, 999);
 
 	// create google calendar
-	const cal = google.calendar({ version: 'v3', auth: client });
+	const cal = google.calendar({ version: 'v3', auth: client as any });
 
 	// list calendar ids
 	const calendars = await cal.calendarList.list();

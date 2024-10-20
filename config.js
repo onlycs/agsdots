@@ -5,6 +5,7 @@ await Utils.execAsync([
 	'--external', 'gi://*',
 	'--external', 'file://*',
 	'--env-file', `${App.configDir}/.env`,
+	'--minify'
 ]); 
 
 await import('file:///tmp/ags/main.js');

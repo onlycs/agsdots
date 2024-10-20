@@ -16,48 +16,57 @@ export interface CalendarWeek {
 	woty: number;
 }
 
-function makeid(day: number, month: number, year: number) {
-	return `${day}-${month}-${year}`;
+export function date_to_id(date: Date) {
+	const day = date.getDate();
+	const month = date.getMonth();
+	const year = date.getFullYear();
+
+	return [day, month, year].join('-');
 }
 
-function idfromdate(date: Date) {
-	return makeid(date.getDate(), date.getMonth(), date.getFullYear());
+export function dmy_to_id(day: number, month: number, year: number) {
+	return date_to_id(new Date(year, month, day));
 }
 
-function today_id() {
-	return idfromdate(new Date());
+export function today_id() {
+	return date_to_id(new Date());
 }
 
-export function makedate(id: string): Date {
+export function id_to_date(id: string): Date {
 	const [day, month, year] = id.split('-').map(Number);
 	return new Date(year, month, day);
 }
 
-function first_day(month: number, year: number) {
+export function first_dotw(month: number, year: number) {
 	return new Date(year, month, 1).getDay();
 }
 
-function days_in(month: number, year: number) {
-	if (month == 11) month = 0, year++;
-	else month++;
+export function days_in(month: number, year: number) {
+	return new Date(year, month + 1, 0).getDate();
+}
 
-	return new Date(year, month, 0).getDate();
+export function woty(date: Date) {
+	const first = new Date(date.getFullYear(), 0, 1);
+	const diff = date.getTime() - first.getTime();
+	const week = Math.ceil(diff / (7 * 24 * 60 * 60 * 1000));
+
+	return week;
 }
 
 function last_end(month: number, year: number, selected: string): CalendarDay[] {
-	const day = first_day(month, year);
-	const num_days = day == 0 ? 7 : day;
-	const prev_month_days = month == 0 ? days_in(11, year - 1) : days_in(month - 1, year);
-	const begin_day = prev_month_days - num_days + 1;
+	const begin_dotw = first_dotw(month, year);
+	const prepend_days = begin_dotw == 0 ? 7 : begin_dotw;
+	const prepend_last = days_in(month - 1, year);
+	const prepend_begin = prepend_last - prepend_days + 1;
 
 	const days = [] as CalendarDay[];
 
-	for (let i = 0; i < num_days; i++) {
-		const id = month == 0 ? makeid(begin_day + i, 11, year - 1) : makeid(begin_day + i, month - 1, year);
+	for (let i = 0; i < prepend_days; i++) {
+		const id = dmy_to_id(prepend_begin + i, month - 1, year);
 
 		days.push({
 			id,
-			date: begin_day + i,
+			date: prepend_begin + i,
 			today: false,
 			in_month: false,
 			selected: selected == id,
@@ -72,12 +81,13 @@ function all_days(month: number, year: number, selected: string): CalendarDay[] 
 	const num_days = days_in(month, year);
 
 	for (let i = 1; i <= num_days; i++) {
-		const id = makeid(i, month, year);
+		const id = dmy_to_id(i, month, year);
+		const today = new Date();
 
 		days.push({
 			id,
 			date: i,
-			today: i == new Date().getDate() && month == new Date().getMonth() && year == new Date().getFullYear(),
+			today: i == today.getDate() && month == today.getMonth() && year == today.getFullYear(),
 			in_month: true,
 			selected: selected == id,
 		});
@@ -86,7 +96,7 @@ function all_days(month: number, year: number, selected: string): CalendarDay[] 
 	const next_days = (6 * 7) - days.length;
 
 	for (let i = 1; i <= next_days; i++) {
-		const id = month == 11 ? makeid(i, 0, year + 1) : makeid(i, month + 1, year);
+		const id = dmy_to_id(i, month + 1, year);
 
 		days.push({
 			id,
@@ -166,7 +176,7 @@ class CalendarService extends Service {
 	}
 
 	#reselect() {
-		if (new Date().getMonth() == this.#month) this.#selected_val = idfromdate(new Date());
+		if (new Date().getMonth() == this.#month) this.#selected_val = date_to_id(new Date());
 		else this.#selected_val = `1-${this.#month}-${this.#year}`;
 
 		this.#on_day_change();
@@ -193,9 +203,11 @@ class CalendarService extends Service {
 			return;
 		}
 
-		const date = makedate(this.selected);
+		const date = id_to_date(this.selected);
 		const command = `nu -c 'cd ${App.configDir}; echo "${date.toISOString()}" | bun run --silent gcal'`;
 		const selected_clone = this.selected;
+
+		console.log(command);
 
 		Utils.execAsync(command)
 			.then(JSON.parse)
