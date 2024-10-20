@@ -187,7 +187,7 @@ class CalendarService extends Service {
 
 		if (cache) {
 			const [date, data] = cache;
-			if (date.getDate() == new Date().getDate()) return data;
+			if (Math.abs(date.getTime() - new Date().getTime()) <= 1000 * 60 * 60 * 24) return data;
 		}
 	}
 
@@ -212,6 +212,7 @@ class CalendarService extends Service {
 		Utils.execAsync(command)
 			.then(JSON.parse)
 			.then((data: CalendarResponse) => {
+				this.#gcal_cache.set(selected_clone, [new Date(), data]);
 				if (selected_clone != this.selected) return;
 				this.#gcal_val = data;
 				this.notify('gcal');
