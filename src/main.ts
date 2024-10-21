@@ -2,6 +2,8 @@ import Bar from '@widgets/bar';
 import BarMenu from '@widgets/barmenu';
 import ClickOff from '@widgets/clickoff';
 
+App.addIcons(`${App.configDir}/res`);
+
 Utils.monitorFile('/tmp/ags/index.css', () => {
 	App.resetCss();
 	App.applyCss('/tmp/ags/index.css');
