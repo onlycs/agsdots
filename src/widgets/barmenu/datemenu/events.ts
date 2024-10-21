@@ -1,5 +1,5 @@
 import Interactable from '@components/interactable';
-import { CalService, id_to_date, Months, type CalendarResponse } from '@services/calendar';
+import { CalendarService, id_to_date, Months, type CalendarResponse } from '@services/calendar';
 import MenuVis from '@services/menuvis';
 import type { calendar_v3 } from 'googleapis';
 import { Align } from 'types/@girs/gtk-3.0/gtk-3.0.cjs';
@@ -31,7 +31,7 @@ const CalculateDayText = (id: string) => {
 };
 
 const DayText = () => Widget.Label({
-	label: CalService.bind('selected').transform(CalculateDayText),
+	label: CalendarService.bind('selected').transform(CalculateDayText),
 	class_name: 'DayText',
 	xalign: 0,
 });
@@ -48,6 +48,8 @@ const Events = (cal: CalendarResponse) => {
 		events.push(...colored);
 	}
 
+	if (events.length == 0) return [Widget.Label({ label: 'No Events', class_name: 'NoEvents' })];
+
 	return events.sort((a, b) => {
 		const starta = a.start?.dateTime;
 		const startb = b.start?.dateTime;
@@ -59,7 +61,7 @@ const Events = (cal: CalendarResponse) => {
 		return Date.parse(starta) - Date.parse(startb);
 	}).map((ev) => {
 		const get_fulltext = () => {
-			const today = id_to_date(CalService.selected);
+			const today = id_to_date(CalendarService.selected);
 
 			const startstr = ev.start?.dateTime;
 			const endstr = ev.end?.dateTime;
@@ -142,7 +144,7 @@ export default () => Interactable({
 	child: Widget.Box({
 		class_name: 'Events',
 		vertical: true,
-		children: CalService.bind('gcal').transform(cal => [
+		children: CalendarService.bind('gcal').transform(cal => [
 			DayText(),
 			...(cal ? Events(cal) : [Widget.Spinner()] as any),
 		]),
@@ -150,6 +152,6 @@ export default () => Interactable({
 	on_primary_click_release: () => {
 		MenuVis.closeall();
 
-		Utils.execAsync(['gnome-calendar', '--date', id_to_date(CalService.selected).toLocaleDateString()]).catch(console.error);
+		Utils.execAsync(['gnome-calendar', '--date', id_to_date(CalendarService.selected).toLocaleDateString()]).catch(console.error);
 	},
 });

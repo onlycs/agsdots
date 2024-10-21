@@ -14,7 +14,8 @@
 		"lint": "eslint .",
 		"start": "ags -c ./config.js",
 		"watch": "nodemon -w ./src --exec 'bun start' --ext js,ts",
-		"gcal": "bun run src-gcal/index.ts"
+		"gcal": "bun run src-gcal/index.ts",
+		"weather": "bun run src-weather/index.ts"
 	},
 	"sourceType": "module",
 	"dependencies": {

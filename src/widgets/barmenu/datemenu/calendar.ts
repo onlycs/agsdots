@@ -1,5 +1,5 @@
 import Button from '@components/button';
-import { type CalendarWeek, CalService } from '@services/calendar';
+import { type CalendarWeek, CalendarService } from '@services/calendar';
 
 const Header = () => Widget.CenterBox({
 	class_name: 'Header',
@@ -11,15 +11,15 @@ const Header = () => Widget.CenterBox({
 					icon: 'pan-start-symbolic',
 					size: 16,
 				}),
-				on_primary_click_release: () => { CalService.previous(); },
+				on_primary_click_release: () => { CalendarService.previous(); },
 			}),
 		],
 	}),
 
 	center_widget: Button({
-		label: CalService.bind('header'),
+		label: CalendarService.bind('header'),
 		class_name: 'LabelButton',
-		on_primary_click_release: () => { CalService.datereset(); },
+		on_primary_click_release: () => { CalendarService.datereset(); },
 	}),
 
 	end_widget: Widget.Box({
@@ -31,7 +31,7 @@ const Header = () => Widget.CenterBox({
 					icon: 'pan-end-symbolic',
 					size: 16,
 				}),
-				on_primary_click_release: () => { CalService.next(); },
+				on_primary_click_release: () => { CalendarService.next(); },
 			}),
 		],
 	}),
@@ -56,14 +56,14 @@ const Week = (week: CalendarWeek) => Widget.Box({
 		label: ZeroPadded(day.date),
 		class_name: `Day ${day.today ? 'Today' : ''} ${day.in_month ? '' : 'Gray'} ${day.selected ? 'Selected' : ''}`,
 		halign: 3,
-		on_primary_click_release: () => { CalService.select(day.id); },
+		on_primary_click_release: () => { CalendarService.select(day.id); },
 	})),
 });
 
 const Calendar = () => Widget.Box({
 	vertical: true,
 	class_name: 'Weeks',
-	children: CalService.bind('data').transform(weeks => [WeekLabels(), ...weeks.map(Week)]),
+	children: CalendarService.bind('data').transform(weeks => [WeekLabels(), ...weeks.map(Week)]),
 });
 
 export default () => Widget.Box({

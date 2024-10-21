@@ -3,7 +3,7 @@ import { authenticate } from '@google-cloud/local-auth';
 import { google } from 'googleapis';
 import type { OAuth2Client } from 'google-auth-library';
 import type { JSONClient } from 'google-auth-library/build/src/auth/googleauth';
-import type { CalendarResponse } from './response';
+import type { CalendarResponse } from './types';
 
 dotenv.config();
 

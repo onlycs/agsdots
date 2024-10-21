@@ -1,5 +1,5 @@
-import type { CalendarResponse } from '../../src-gcal/response.ts';
-export type { CalendarResponse } from '../../src-gcal/response.ts';
+import type { CalendarResponse } from '../../src-gcal/types.ts';
+export type { CalendarResponse } from '../../src-gcal/types.ts';
 
 export const Months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
 
@@ -133,7 +133,7 @@ function generate_month(month: number, year: number, selected: string): Calendar
 	return weeks;
 }
 
-class CalendarService extends Service {
+class Calendar extends Service {
 	static {
 		Service.register(
 			this,
@@ -217,9 +217,7 @@ class CalendarService extends Service {
 				this.#gcal_val = data;
 				this.notify('gcal');
 			})
-			.catch((error) => {
-				console.error(error);
-			});
+			.catch(console.error);
 	}
 
 	#on_day_change() {
@@ -271,4 +269,4 @@ class CalendarService extends Service {
 	}
 }
 
-export const CalService = new CalendarService();
+export const CalendarService = new Calendar();

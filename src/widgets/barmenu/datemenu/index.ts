@@ -1,6 +1,7 @@
 import Date from './date';
 import Calendar from './calendar';
 import Events from './events';
+import Weather from './weather';
 
 export default Widget.Box({
 	class_name: 'DateMenu',
@@ -9,5 +10,6 @@ export default Widget.Box({
 		Date(),
 		Calendar(),
 		Events(),
+		Weather(),
 	],
 });
