@@ -1,4 +1,3 @@
-import type Gtk from 'gi://Gtk';
 import type Box from 'resource:///com/github/Aylur/ags/widgets/box.js';
 import Interactable from '@components/interactable';
 
@@ -38,7 +37,7 @@ const Indicator = () => {
 	}
 
 	function Boxes() {
-		const widgets: Array<Box<Gtk.Widget, unknown>> = [];
+		const widgets: Array<Box<any, any>> = [];
 
 		for (const i of Array(10).keys()) {
 			widgets.push(Widget.Box({
