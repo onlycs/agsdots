@@ -690,6 +690,9 @@ function filter_date(d) {
       return evday.getDate() == d.getDate() && evday.getMonth() == d.getMonth();
     }
     const start = new Date(ev.start.dateTime);
+    const end = new Date(ev.end.dateTime);
+    if (end.getTime() > d.getTime() && start.getTime() < d.getTime())
+      return true;
     return start.getDate() == d.getDate() && start.getMonth() == d.getMonth();
   };
 }
@@ -747,6 +750,12 @@ class CalService extends Service {
         year: this.#year
       })
     };
+  }
+  get curmonth() {
+    return this.#month;
+  }
+  get curyear() {
+    return this.#year;
   }
   #notify() {
     this.notify("data");
@@ -1027,10 +1036,10 @@ var Events = (cal) => {
       ]
     });
   });
-  if (CalendarService.data.selected.split("-")[1] != new Date().getMonth().toString())
+  if (parseInt(CalendarService.data.selected.split("-")[1]) != CalendarService.curmonth)
     return [
       Widget.Label({
-        label: "Will not fetch events\noutside month",
+        label: "Will not fetch events outside current month",
         class_name: "NoEvents",
         wrap: true,
         justify: import_gtk_3_0.Justification.CENTER
@@ -1186,4 +1195,4 @@ App.config({
   windows: [bar_default, barmenu_default, clickoff_default]
 });
 
-//# debugId=FF8F20CD44D4BA6B64756E2164756E21
+//# debugId=7A7AEC8D9D4C00F964756E2164756E21

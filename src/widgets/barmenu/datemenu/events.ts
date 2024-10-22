@@ -139,9 +139,9 @@ const Events = (cal: CalendarResponse) => {
 			});
 		});
 
-	if (CalendarService.data.selected.split('-')[1] != new Date().getMonth().toString()) return [
+	if (parseInt(CalendarService.data.selected.split('-')[1]) != CalendarService.curmonth) return [
 		Widget.Label({
-			label: 'Will not fetch events\noutside month',
+			label: 'Will not fetch events outside current month',
 			class_name: 'NoEvents',
 			wrap: true,
 			justify: Justification.CENTER,

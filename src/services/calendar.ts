@@ -158,6 +158,9 @@ export function filter_date(d: Date): (_: calendar_v3.Schema$Event) => boolean {
 		}
 
 		const start = new Date(ev.start.dateTime!);
+		const end = new Date(ev.end.dateTime!);
+
+		if (end.getTime() > d.getTime() && start.getTime() < d.getTime()) return true;
 		return start.getDate() == d.getDate() && start.getMonth() == d.getMonth();
 	};
 }
@@ -232,6 +235,14 @@ class CalService extends Service {
 				year: this.#year,
 			}),
 		};
+	}
+
+	get curmonth() {
+		return this.#month;
+	}
+
+	get curyear() {
+		return this.#year;
 	}
 
 	#notify() {
