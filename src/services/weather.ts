@@ -50,6 +50,12 @@ class Weather extends Service {
 			})
 			.catch(console.error);
 	}
+
+	force_update() {
+		this.#weather_val = undefined;
+		this.notify('weather');
+		this.#update();
+	}
 }
 
 export const WeatherService = new Weather();

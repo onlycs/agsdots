@@ -8,16 +8,16 @@ export default Widget.Window({
 	anchor: ['top', 'left', 'right'],
 	exclusivity: 'exclusive',
 	class_name: 'Bar',
+	hexpand: true,
 	child: Widget.CenterBox({
 		start_widget: Widget.Box({
-			children: [Window, Workspace],
+			children: [
+				Window,
+				Workspace,
+			],
 			spacing: 8,
 		}),
-		center_widget: Widget.Box({
-			children: [DateTime],
-			spacing: 8,
-		}),
-		end_widget: Widget.Box({}),
+		center_widget: DateTime,
 		class_name: 'Bar',
 	}),
 	height_request: 28,

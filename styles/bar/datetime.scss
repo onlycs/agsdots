@@ -4,4 +4,5 @@
 
 .DateTimeBox {
 	@include BarClickable();
+	min-width: 16.5rem;
 }

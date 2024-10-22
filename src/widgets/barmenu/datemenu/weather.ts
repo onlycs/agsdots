@@ -1,6 +1,8 @@
 import Interactable from '@components/interactable';
 import { timeof } from '@services/calendar';
+import MenuVis from '@services/menuvis';
 import { WeatherService, type CurrentWeather } from '@services/weather';
+import type Gtk from 'gi://Gtk?version=3.0';
 import { Align, Justification } from 'types/@girs/gtk-3.0/gtk-3.0.cjs';
 
 const IconMap: Record<string, string> = {
@@ -103,7 +105,7 @@ export default () => Interactable({
 		class_name: 'Weather Card',
 		vertical: true,
 		children: WeatherService.bind('weather').transform((w) => {
-			if (!w) return [];
+			if (!w) return [Widget.Spinner()] as Gtk.Widget[];
 			else return [
 				Header(w),
 				Widget.CenterBox({
@@ -114,6 +116,10 @@ export default () => Interactable({
 		}),
 	}),
 	on_primary_click_release: () => {
+		MenuVis.closeall();
 		Utils.execAsync('gnome-weather').catch(console.error);
+	},
+	on_secondary_click_release: () => {
+		WeatherService.force_update();
 	},
 });

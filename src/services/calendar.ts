@@ -331,7 +331,7 @@ class CalService extends Service {
 		this.#on_day_change();
 	}
 
-	force_refresh() {
+	force_update() {
 		this.#fetch_gcal();
 	}
 

@@ -2,6 +2,7 @@ import Interactable from '@components/interactable';
 import { CalendarService, filter_date, id_to_date, Months, timeof, type CalendarResponse } from '@services/calendar';
 import MenuVis from '@services/menuvis';
 import type { calendar_v3 } from 'googleapis';
+import type Gtk from 'types/@girs/gtk-3.0/gtk-3.0';
 import { Align, Justification } from 'types/@girs/gtk-3.0/gtk-3.0.cjs';
 import { EllipsizeMode } from 'types/@girs/pango-1.0/pango-1.0.cjs';
 
@@ -148,11 +149,14 @@ export default () => Interactable({
 		spacing: 4,
 		children: CalendarService.bindkey('gcal').transform(cal => [
 			DayText(),
-			...(cal ? Events(cal) : [Widget.Spinner()] as any),
+			...(cal ? Events(cal) : [Widget.Spinner()] as Gtk.Widget[]),
 		]),
 	}),
 	on_primary_click_release: () => {
 		MenuVis.closeall();
 		Utils.execAsync(['gnome-calendar', '--date', id_to_date(CalendarService.data.selected).toLocaleDateString()]).catch(console.error);
+	},
+	on_secondary_click_release: () => {
+		CalendarService.force_update();
 	},
 });
