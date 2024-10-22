@@ -13,7 +13,7 @@ I like gnome shell don't kill me for it. This project is not finished.
 - [x] Notifications
 - [x] Do not disturb
 - [x] Clock & Calendar Widgets
-- [ ] Weather Widget
+- [x] Weather Widget
 - [ ] Quick Settings
 - [ ] Minimized app drawer thingy
 - [ ] Overview (no, i'm actually going to implement gnome-shell's overview, watch me)
