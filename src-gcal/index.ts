@@ -72,11 +72,14 @@ async function list(client: JSONClient | OAuth2Client) {
 	// stdin is an iso string
 	const date = new Date(line);
 
-	// set the time to midnight
+	// {month} 1st, 12am
+	date.setDate(1);
 	date.setHours(0, 0, 0, 0);
 
-	// make an end-of-day date
+	// {month} last, 11:59pm
 	const end = new Date(date);
+	end.setMonth(date.getMonth() + 1);
+	end.setDate(0);
 	end.setHours(23, 59, 59, 999);
 
 	// create google calendar
@@ -107,7 +110,11 @@ async function list(client: JSONClient | OAuth2Client) {
 	const responses = await Promise.all(requests);
 	const events = responses.filter(r => defined(r.data.items)).map((r, i) => [colors[i], r.data]);
 	const response: CalendarResponse = {
-		date,
+		key: {
+			month: date.getMonth(),
+			year: date.getFullYear(),
+		},
+		generated: new Date(),
 		events: Object.fromEntries(events),
 	};
 

@@ -11,11 +11,12 @@
 		"typescript-eslint": "^8.10.0"
 	},
 	"scripts": {
-		"lint": "eslint .",
+		"prestart": "bun build src/main.ts --outdir=gen --external resource://* --external file://* --external gi://* --env-file .env --sourcemap=external",
 		"start": "ags -c ./config.js",
-		"watch": "nodemon -w ./src --exec 'bun start' --ext js,ts",
+		"watch": "nodemon -w src --exec 'bun start' --ext js,ts",
 		"gcal": "bun run src-gcal/index.ts",
-		"weather": "bun run src-weather/index.ts"
+		"weather": "bun run src-weather/index.ts",
+		"lint": "eslint ."
 	},
 	"sourceType": "module",
 	"dependencies": {

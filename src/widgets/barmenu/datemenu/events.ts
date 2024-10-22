@@ -1,8 +1,8 @@
 import Interactable from '@components/interactable';
-import { CalendarService, id_to_date, Months, type CalendarResponse } from '@services/calendar';
+import { CalendarService, filter_date, id_to_date, Months, type CalendarResponse } from '@services/calendar';
 import MenuVis from '@services/menuvis';
 import type { calendar_v3 } from 'googleapis';
-import { Align } from 'types/@girs/gtk-3.0/gtk-3.0.cjs';
+import { Align, Justification } from 'types/@girs/gtk-3.0/gtk-3.0.cjs';
 import { EllipsizeMode } from 'types/@girs/pango-1.0/pango-1.0.cjs';
 
 const CalculateDayText = (id: string) => {
@@ -31,7 +31,7 @@ const CalculateDayText = (id: string) => {
 };
 
 const DayText = () => Widget.Label({
-	label: CalendarService.bind('selected').transform(CalculateDayText),
+	label: CalendarService.bindkey('selected').transform(CalculateDayText),
 	class_name: 'DayText',
 	xalign: 0,
 });
@@ -39,6 +39,8 @@ const DayText = () => Widget.Label({
 const Events = (cal: CalendarResponse) => {
 	const calendars = cal.events;
 	const events: Array<calendar_v3.Schema$Event & { color: string }> = [];
+	const today = id_to_date(CalendarService.data.selected);
+	const datefilter = filter_date(today);
 
 	for (const color in calendars) {
 		const evdata = calendars[color].items!;
@@ -48,110 +50,118 @@ const Events = (cal: CalendarResponse) => {
 		events.push(...colored);
 	}
 
-	if (events.length == 0) return [Widget.Label({ label: 'No Events', class_name: 'NoEvents' })];
+	const widgets = events
+		.filter(datefilter)
+		.sort((a, b) => {
+			const starta = a.start?.dateTime;
+			const startb = b.start?.dateTime;
 
-	return events.sort((a, b) => {
-		const starta = a.start?.dateTime;
-		const startb = b.start?.dateTime;
+			// undefined == 12am
+			if (!starta) return -1;
+			if (!startb) return 1;
 
-		// undefined == 12am
-		if (!starta) return -1;
-		if (!startb) return 1;
+			return Date.parse(starta) - Date.parse(startb);
+		}).map((ev) => {
+			const get_fulltext = () => {
+				const startstr = ev.start?.dateTime;
+				const endstr = ev.end?.dateTime;
 
-		return Date.parse(starta) - Date.parse(startb);
-	}).map((ev) => {
-		const get_fulltext = () => {
-			const today = id_to_date(CalendarService.selected);
+				if (!startstr || !endstr) return 'All Day';
 
-			const startstr = ev.start?.dateTime;
-			const endstr = ev.end?.dateTime;
+				const start = new Date(Date.parse(startstr));
+				const end = new Date(Date.parse(endstr));
+				const startday = new Date(start.getFullYear(), start.getMonth(), start.getDate());
+				const endday = new Date(end.getFullYear(), end.getMonth(), end.getDate());
 
-			if (!startstr || !endstr) return 'All Day';
+				const timeof = (date: Date) => {
+					const hours = date.getHours(); // 0-24
+					const aphours = (hours + 11) % 12 + 1;
+					const ap = hours >= 12 ? 'pm' : 'am';
+					const minutes = date.getMinutes().toString().padStart(2, '0');
 
-			const start = new Date(Date.parse(startstr));
-			const end = new Date(Date.parse(endstr));
-			const startday = new Date(start.getFullYear(), start.getMonth(), start.getDate());
-			const endday = new Date(end.getFullYear(), end.getMonth(), end.getDate());
+					if (minutes == '00') return `${aphours}${ap}`;
+					else return `${aphours}:${minutes}${ap}`;
+				};
 
-			const timeof = (date: Date) => {
-				const hours = date.getHours(); // 0-24
-				const aphours = (hours + 11) % 12 + 1;
-				const ap = hours >= 12 ? 'pm' : 'am';
-				const minutes = date.getMinutes().toString().padStart(2, '0');
+				const num_days = (endday.getTime() - startday.getTime()) / (24 * 60 * 60 * 1000) + 1;
+				const cur_day = (today.getTime() - startday.getTime()) / (24 * 60 * 60 * 1000) + 1;
 
-				if (minutes == '00') return `${aphours}${ap}`;
-				else return `${aphours}:${minutes}${ap}`;
+				const textstart = timeof(start);
+				const textend = timeof(end);
+				let fulltext = `${textstart} - ${textend}`;
+
+				if (startday.getTime() == endday.getTime()) {
+					if ((start.getHours() >= 12) == (end.getHours() >= 12)) {
+						const stripped = textstart.substring(0, textstart.length - 2);
+						fulltext = `${stripped} - ${textend}`;
+					}
+				} else if (startday.getTime() != today.getTime() && endday.getTime() != today.getTime()) {
+					fulltext = 'All Day';
+					ev.summary! += ` (Day ${cur_day}/${num_days})`;
+				} else if (startday.getTime() == today.getTime()) {
+					fulltext = textstart;
+					ev.summary! += ` (Day ${cur_day}/${num_days})`;
+				} else {
+					fulltext = `Until ${textend}`;
+					ev.summary! += ` (Day ${cur_day}/${num_days})`;
+				}
+
+				return fulltext;
 			};
 
-			const num_days = (endday.getTime() - startday.getTime()) / (24 * 60 * 60 * 1000) + 1;
-			const cur_day = (today.getTime() - startday.getTime()) / (24 * 60 * 60 * 1000) + 1;
+			const fulltext = get_fulltext();
 
-			const textstart = timeof(start);
-			const textend = timeof(end);
-			let fulltext = `${textstart} - ${textend}`;
-
-			if (startday.getTime() == endday.getTime()) {
-				if ((start.getHours() >= 12) == (end.getHours() >= 12)) {
-					const stripped = textstart.substring(0, textstart.length - 2);
-					fulltext = `${stripped} - ${textend}`;
-				}
-			} else if (startday.getTime() != today.getTime() && endday.getTime() != today.getTime()) {
-				fulltext = 'All Day';
-				ev.summary! += ` (Day ${cur_day}/${num_days})`;
-			} else if (startday.getTime() == today.getTime()) {
-				fulltext = textstart;
-				ev.summary! += ` (Day ${cur_day}/${num_days})`;
-			} else {
-				fulltext = `Until ${textend}`;
-				ev.summary! += ` (Day ${cur_day}/${num_days})`;
-			}
-
-			return fulltext;
-		};
-
-		const fulltext = get_fulltext();
-
-		return Widget.Box({
-			class_name: 'Event',
-			vertical: false,
-			children: [
-				Widget.Box({
-					css: `background-color: ${ev.color}`,
-					class_name: 'VPill',
-				}),
-				Widget.Box({
-					vertical: true,
-					children: [
-						Widget.Label({
-							label: fulltext.trim(),
-							class_name: 'Time',
-							halign: Align.START,
-						}),
-						Widget.Label({
-							label: ev.summary,
-							class_name: 'Summary',
-							halign: Align.START,
-							ellipsize: EllipsizeMode.END,
-						}),
-					],
-				}),
-			],
+			return Widget.Box({
+				class_name: 'Event',
+				vertical: false,
+				children: [
+					Widget.Box({
+						css: `background-color: ${ev.color}`,
+						class_name: 'VPill',
+					}),
+					Widget.Box({
+						vertical: true,
+						children: [
+							Widget.Label({
+								label: fulltext.trim(),
+								class_name: 'Time',
+								halign: Align.START,
+							}),
+							Widget.Label({
+								label: ev.summary,
+								class_name: 'Summary',
+								halign: Align.START,
+								ellipsize: EllipsizeMode.END,
+							}),
+						],
+					}),
+				],
+			});
 		});
-	});
+
+	if (CalendarService.data.selected.split('-')[1] != new Date().getMonth().toString()) return [
+		Widget.Label({
+			label: 'Will not fetch events\noutside month',
+			class_name: 'NoEvents',
+			wrap: true,
+			justify: Justification.CENTER,
+		}),
+	];
+	else if (widgets.length == 0) return [Widget.Label({ label: 'No Events', class_name: 'NoEvents' })];
+	else return widgets;
 };
 
 export default () => Interactable({
 	child: Widget.Box({
 		class_name: 'Events',
 		vertical: true,
-		children: CalendarService.bind('gcal').transform(cal => [
+		children: CalendarService.bindkey('gcal').transform(cal => [
 			DayText(),
 			...(cal ? Events(cal) : [Widget.Spinner()] as any),
 		]),
 	}),
 	on_primary_click_release: () => {
 		MenuVis.closeall();
-
-		Utils.execAsync(['gnome-calendar', '--date', id_to_date(CalendarService.selected).toLocaleDateString()]).catch(console.error);
+		Utils.execAsync(['gnome-calendar', '--date', id_to_date(CalendarService.data.selected).toLocaleDateString()]).catch(console.error);
 	},
 });

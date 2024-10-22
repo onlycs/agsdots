@@ -1,4 +1,6 @@
-import type { CalendarResponse } from '../../src-gcal/types.ts';
+import type { calendar_v3 } from 'googleapis';
+import type { CalendarKey, CalendarResponse } from '../../src-gcal/types.ts';
+import type { Binding } from 'resource:///com/github/Aylur/ags/service.js';
 export type { CalendarResponse } from '../../src-gcal/types.ts';
 
 export const Months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
@@ -133,103 +135,150 @@ function generate_month(month: number, year: number, selected: string): Calendar
 	return weeks;
 }
 
-class Calendar extends Service {
+function ago(other: Date | undefined) {
+	return new Date().getTime() - (other?.getTime() ?? 0);
+}
+
+function id_to_key(id: string): CalendarKey {
+	const [_, month, year] = id.split('-').map(Number);
+	return { month, year };
+}
+
+function date_to_key(date: Date): CalendarKey {
+	return { month: date.getMonth(), year: date.getFullYear() };
+}
+
+export function filter_date(d: Date): (_: calendar_v3.Schema$Event) => boolean {
+	return (ev) => {
+		if (!ev.end || !ev.start) return false;
+
+		if (ev.end.date) {
+			const evday = new Date(ev.end.date);
+			return evday.getDate() == d.getDate() && evday.getMonth() == d.getMonth();
+		}
+
+		const start = new Date(ev.start.dateTime!);
+		return start.getDate() == d.getDate() && start.getMonth() == d.getMonth();
+	};
+}
+
+export function filter_id(s: string): (_: calendar_v3.Schema$Event) => boolean {
+	return filter_date(id_to_date(s));
+}
+
+class GoogleCalendarManager {
+	#cache = new Map<string, CalendarResponse>();
+
+	register(response: CalendarResponse) {
+		this.#cache.set(JSON.stringify(response.key), response);
+	}
+
+	get(key: CalendarKey) {
+		return this.#cache.get(JSON.stringify(key));
+	}
+
+	has(key: CalendarKey) {
+		return this.#cache.has(JSON.stringify(key));
+	}
+
+	remove(key: CalendarKey) {
+		this.#cache.delete(JSON.stringify(key));
+	}
+}
+
+export interface CalendarServiceData {
+	selected: string;
+	weeks: CalendarWeek[];
+	header: string;
+	gcal: CalendarResponse | undefined;
+}
+
+class CalService extends Service {
 	static {
 		Service.register(
 			this,
 			{},
 			{
-				selected: ['string', 'r'],
 				data: ['gobject', 'r'],
-				header: ['string', 'r'],
-				gcal: ['gobject', 'r'],
 			},
 		);
 	}
 
 	#month = 0;
 	#year = 0;
-	#selected_val: string = today_id();
-	#gcal_val: CalendarResponse | undefined = undefined;
-	#gcal_cache = new Map<string, [Date, CalendarResponse]>();
+	#selected = today_id();
+	#google = new GoogleCalendarManager();
 
 	constructor() {
 		super();
-		this.datereset();
+		this.reset();
+
+		Utils.interval(1000 * 60 * 60, () => {
+			this.#update_gcal();
+		});
 	}
 
-	get selected() {
-		return this.#selected_val;
+	get data(): CalendarServiceData {
+		const header = () => {
+			if (this.#year == new Date().getFullYear()) return Months[this.#month];
+			else return `${Months[this.#month]} ${this.#year}`;
+		};
+		return {
+			selected: this.#selected,
+			weeks: generate_month(this.#month, this.#year, this.#selected),
+			header: header(),
+			gcal: this.#google.get({
+				month: this.#month,
+				year: this.#year,
+			}),
+		};
 	}
 
-	get data() {
-		return generate_month(this.#month, this.#year, this.selected);
+	#notify() {
+		this.notify('data');
 	}
 
-	get header() {
-		if (this.#year == new Date().getFullYear()) return Months[this.#month];
-		else return `${Months[this.#month]}  ${this.#year}`;
-	}
+	#fetch_gcal() {
+		const date = id_to_date(this.#selected);
 
-	get gcal() {
-		return this.#gcal_val;
-	}
+		this.#google.remove(date_to_key(date));
+		this.#notify();
 
-	#reselect() {
-		if (new Date().getMonth() == this.#month) this.#selected_val = date_to_id(new Date());
-		else this.#selected_val = `1-${this.#month}-${this.#year}`;
-
-		this.#on_day_change();
-	}
-
-	#try_cache(): CalendarResponse | undefined {
-		const cache = this.#gcal_cache.get(this.selected);
-
-		if (cache) {
-			const [date, data] = cache;
-			if (Math.abs(date.getTime() - new Date().getTime()) <= 1000 * 60 * 60 * 24) return data;
-		}
-	}
-
-	#update_gcal() {
-		this.#gcal_val = undefined;
-		this.notify('gcal');
-
-		const cache = this.#try_cache();
-
-		if (cache) {
-			this.#gcal_val = cache;
-			this.notify('gcal');
-			return;
-		}
-
-		const date = id_to_date(this.selected);
-		const command = `nu -c 'cd ${App.configDir}; echo "${date.toISOString()}" | bun run --silent gcal'`;
-		const selected_clone = this.selected;
-
-		console.log(command);
+		const command = `nu -c 'cd ${App.configDir}; echo "${id_to_date(this.#selected).toISOString()}" | bun run --silent gcal'`;
 
 		Utils.execAsync(command)
 			.then(JSON.parse)
-			.then((data: CalendarResponse) => {
-				this.#gcal_cache.set(selected_clone, [new Date(), data]);
-				if (selected_clone != this.selected) return;
-				this.#gcal_val = data;
-				this.notify('gcal');
+			.then((output: CalendarResponse) => {
+				this.#google.register({
+					...output,
+					generated: new Date(output.generated),
+				});
+				this.#notify();
 			})
 			.catch(console.error);
 	}
 
-	#on_day_change() {
-		this.notify('selected');
-		this.notify('data');
-		this.#update_gcal();
+	#update_gcal() {
+		const key = id_to_key(this.#selected);
+
+		if (this.#google.has(key) && ago(this.#google.get(key)!.generated) <= 1000 * 60 * 60) {
+			this.#notify();
+			return;
+		}
+
+		this.#fetch_gcal();
 	}
 
 	#on_month_change() {
-		this.#reselect();
-		this.notify('header');
-		this.notify('data');
+		if (new Date().getMonth() == this.#month) this.#selected = date_to_id(new Date());
+		else this.#selected = `1-${this.#month}-${this.#year}`;
+
+		this.#on_day_change();
+	}
+
+	#on_day_change() {
+		this.#update_gcal();
+		this.#notify();
 	}
 
 	previous() {
@@ -246,7 +295,7 @@ class Calendar extends Service {
 		this.#on_month_change();
 	}
 
-	datereset() {
+	reset() {
 		this.#month = new Date().getMonth();
 		this.#year = new Date().getFullYear();
 
@@ -254,19 +303,24 @@ class Calendar extends Service {
 	}
 
 	select(day: string) {
-		if (day == today_id() && this.#selected_val == today_id()) return;
-		else if (day == this.#selected_val) {
-			this.#reselect();
-			return;
-		} else this.#selected_val = day;
+		if (day == today_id() && this.#selected == today_id()) return;
+		else if (day == this.#selected) this.#on_month_change();
+		else this.#selected = day;
 
 		this.#on_day_change();
 	}
 
 	force_refresh() {
-		this.#gcal_cache.clear();
-		this.#update_gcal();
+		this.#fetch_gcal();
+	}
+
+	bindkey<T extends keyof CalendarServiceData>(key: T): Binding<this, any, CalendarServiceData[T]> {
+		return this.bind('data' as any).transform(data => data[key]);
+	}
+
+	bindkeys<T extends keyof CalendarServiceData>(...keys: T[]): Binding<this, any, Pick<CalendarServiceData, T>> {
+		return this.bind('data' as any).transform(data => Object.fromEntries(keys.map(key => [key, data[key]])) as Pick<CalendarServiceData, T>);
 	}
 }
 
-export const CalendarService = new Calendar();
+export const CalendarService = new CalService();

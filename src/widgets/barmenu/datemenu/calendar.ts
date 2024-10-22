@@ -1,5 +1,6 @@
 import Button from '@components/button';
-import { type CalendarWeek, CalendarService } from '@services/calendar';
+import Interactable from '@components/interactable';
+import { type CalendarResponse, type CalendarWeek, CalendarService, filter_id } from '@services/calendar';
 
 const Header = () => Widget.CenterBox({
 	class_name: 'Header',
@@ -17,9 +18,9 @@ const Header = () => Widget.CenterBox({
 	}),
 
 	center_widget: Button({
-		label: CalendarService.bind('header'),
+		label: CalendarService.bindkey('header'),
 		class_name: 'LabelButton',
-		on_primary_click_release: () => { CalendarService.datereset(); },
+		on_primary_click_release: () => { CalendarService.reset(); },
 	}),
 
 	end_widget: Widget.Box({
@@ -39,7 +40,7 @@ const Header = () => Widget.CenterBox({
 
 const WeekLabels = () => Widget.Box({
 	class_name: 'WeekLabels',
-	spacing: 18,
+	spacing: 17,
 	halign: 3,
 	children: ['S', 'M', 'T', 'W', 'T', 'F', 'S'].map(label => Widget.Label({
 		label,
@@ -49,21 +50,34 @@ const WeekLabels = () => Widget.Box({
 
 const ZeroPadded = (day: number) => day.toString().padStart(2, '0');
 
-const Week = (week: CalendarWeek) => Widget.Box({
+const Week = (week: CalendarWeek, gcal: CalendarResponse | undefined) => Widget.Box({
 	class_name: 'Week',
 	halign: 3,
-	children: week.days.map(day => Button({
-		label: ZeroPadded(day.date),
-		class_name: `Day ${day.today ? 'Today' : ''} ${day.in_month ? '' : 'Gray'} ${day.selected ? 'Selected' : ''}`,
+	children: week.days.map(day => Interactable({
 		halign: 3,
 		on_primary_click_release: () => { CalendarService.select(day.id); },
+		child: Widget.Box({
+			vertical: true,
+			class_name: `Day ${day.today ? 'Today' : ''} ${day.in_month ? '' : 'Gray'} ${day.selected ? 'Selected' : ''}`,
+			halign: 3,
+			children: [
+				Widget.Label({
+					label: ZeroPadded(day.date),
+					class_name: 'Label',
+				}),
+				Widget.Label({
+					label: '•'.repeat(Math.min(Object.values(gcal?.events ?? {}).flatMap(n => n.items ?? []).filter(filter_id(day.id)).length, 3)),
+					class_name: 'Bullet',
+				}),
+			],
+		}),
 	})),
 });
 
 const Calendar = () => Widget.Box({
 	vertical: true,
 	class_name: 'Weeks',
-	children: CalendarService.bind('data').transform(weeks => [WeekLabels(), ...weeks.map(Week)]),
+	children: CalendarService.bindkeys('weeks', 'gcal').transform(data => [WeekLabels(), ...data.weeks.map(week => Week(week, data.gcal))]),
 });
 
 export default () => Widget.Box({
