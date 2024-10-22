@@ -169,6 +169,16 @@ export function filter_id(s: string): (_: calendar_v3.Schema$Event) => boolean {
 	return filter_date(id_to_date(s));
 }
 
+export function timeof(date: Date) {
+	const hours = date.getHours(); // 0-24
+	const aphours = (hours + 11) % 12 + 1;
+	const ap = hours >= 12 ? 'pm' : 'am';
+	const minutes = date.getMinutes().toString().padStart(2, '0');
+
+	if (minutes == '00') return `${aphours}${ap}`;
+	else return `${aphours}:${minutes}${ap}`;
+};
+
 class GoogleCalendarManager {
 	#cache = new Map<string, CalendarResponse>();
 

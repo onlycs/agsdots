@@ -1,20 +1,5 @@
 .Events {
-	@include Button($Layer1);
-
-	margin-top: 1rem;
-	border-radius: 0.5rem;
-	padding: 1rem;
-
-	.DayText {
-		font-size: 1.1rem;
-		font-weight: 600;
-		color: lighten($TextDark, 20%);
-		margin-bottom: 0.25rem;
-	}
-
 	.Event {
-		margin-top: 0.5rem;
-
 		.VPill {
 			min-width: 0.25rem;
 			border-radius: 0.25rem;

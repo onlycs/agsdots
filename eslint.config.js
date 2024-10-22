@@ -116,6 +116,7 @@ export default [
 			"@typescript-eslint/no-unnecessary-type-constraint": "error",
 			"@typescript-eslint/no-unsafe-argument": "off",
 			"@typescript-eslint/no-unsafe-assignment": "off",
+			"@typescript-eslint/no-unsafe-call": "off",
 			"@typescript-eslint/no-unsafe-declaration-merging": "error",
 			"@typescript-eslint/no-unsafe-enum-comparison": "off",
 			"@typescript-eslint/no-unsafe-function-type": "error",

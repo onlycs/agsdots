@@ -1,7 +1,47 @@
-.WeatherBox {
-	@include Button($Layer1);
+.Weather {
+	.Header {
+		.Place {
+			color: darken($Text, 15%);
+			font-size: 0.85rem;
+			margin-bottom: 0.15rem;
+		}
 
-	margin-top: 1rem;
-	border-radius: 0.5rem;
-	padding: 1rem;
+		.Summary {
+			color: $Text;
+			font-size: 1.1rem;
+			font-weight: 600;
+		}
+	}
+
+	.Temperatures {
+		margin-top: 0.5rem;
+
+		.Temperature {
+			color: $Text;
+			font-size: 2.5rem;
+			font-weight: 600;
+			margin-bottom: 0.5rem;
+		}
+
+		.HiLo {
+			.High {
+				color: darken($Text, 5%);
+				font-weight: 500;
+			}
+
+			.Low {
+				color: lighten($TextDark, 15%);
+				font-weight: 400;
+			}
+		}
+	}
+
+	.Hourly {
+
+		.Hour {
+			.Temperature {
+				margin-left: 0.1rem;
+			}
+		}
+	}
 }

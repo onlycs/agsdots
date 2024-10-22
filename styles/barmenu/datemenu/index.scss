@@ -1,8 +1,9 @@
 .DateMenu {
 	margin-left: calc(1rem - 4px);
 
+	@import './card';
 	@import './date';
 	@import './calendar';
 	@import './events';
-	@import './weather.scss';
+	@import './weather';
 }

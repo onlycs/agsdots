@@ -34,3 +34,4 @@ $BackdropSelectedFg: $BackdropText;
 $BackdropSelectedBg: transparentize(desaturate($SelectedBg, 100%), 0.5);
 
 $Layer1: lighten($Background, 2%);
+$Layer2: lighten($Background, 6%);

@@ -30,8 +30,22 @@ class Weather extends Service {
 		const command = `nu -c 'cd ${App.configDir}; bun run --silent weather'`;
 		Utils.execAsync(command)
 			.then(JSON.parse)
-			.then((output) => {
-				this.#weather_val = output;
+			.then((output: CurrentWeather) => {
+				this.#weather_val = {
+					...output,
+					hourly: output.hourly.map((hour) => {
+						return {
+							...hour,
+							time: new Date(hour.time),
+						};
+					}),
+					daily: output.daily.map((day) => {
+						return {
+							...day,
+							time: new Date(day.time),
+						};
+					}),
+				};
 				this.notify('weather');
 			})
 			.catch(console.error);

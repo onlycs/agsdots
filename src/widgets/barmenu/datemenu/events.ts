@@ -1,5 +1,5 @@
 import Interactable from '@components/interactable';
-import { CalendarService, filter_date, id_to_date, Months, type CalendarResponse } from '@services/calendar';
+import { CalendarService, filter_date, id_to_date, Months, timeof, type CalendarResponse } from '@services/calendar';
 import MenuVis from '@services/menuvis';
 import type { calendar_v3 } from 'googleapis';
 import { Align, Justification } from 'types/@girs/gtk-3.0/gtk-3.0.cjs';
@@ -32,7 +32,7 @@ const CalculateDayText = (id: string) => {
 
 const DayText = () => Widget.Label({
 	label: CalendarService.bindkey('selected').transform(CalculateDayText),
-	class_name: 'DayText',
+	class_name: 'Label',
 	xalign: 0,
 });
 
@@ -72,16 +72,6 @@ const Events = (cal: CalendarResponse) => {
 				const end = new Date(Date.parse(endstr));
 				const startday = new Date(start.getFullYear(), start.getMonth(), start.getDate());
 				const endday = new Date(end.getFullYear(), end.getMonth(), end.getDate());
-
-				const timeof = (date: Date) => {
-					const hours = date.getHours(); // 0-24
-					const aphours = (hours + 11) % 12 + 1;
-					const ap = hours >= 12 ? 'pm' : 'am';
-					const minutes = date.getMinutes().toString().padStart(2, '0');
-
-					if (minutes == '00') return `${aphours}${ap}`;
-					else return `${aphours}:${minutes}${ap}`;
-				};
 
 				const num_days = (endday.getTime() - startday.getTime()) / (24 * 60 * 60 * 1000) + 1;
 				const cur_day = (today.getTime() - startday.getTime()) / (24 * 60 * 60 * 1000) + 1;
@@ -153,8 +143,9 @@ const Events = (cal: CalendarResponse) => {
 
 export default () => Interactable({
 	child: Widget.Box({
-		class_name: 'Events',
+		class_name: 'Events Card',
 		vertical: true,
+		spacing: 4,
 		children: CalendarService.bindkey('gcal').transform(cal => [
 			DayText(),
 			...(cal ? Events(cal) : [Widget.Spinner()] as any),

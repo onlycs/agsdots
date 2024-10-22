@@ -134,4 +134,5 @@ dist
 
 oauth.json
 token.json
-./gen
+/gen
+/gen/*

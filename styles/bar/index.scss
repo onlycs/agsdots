@@ -10,7 +10,7 @@
 
 @mixin BarClickable() {
 	&.Click {
-		background-color: darken(transparentize($Foreground, 0.9), 10%);
+		background-color: darken(transparentize($Foreground, 0.9), 20%);
 	}
 }
 

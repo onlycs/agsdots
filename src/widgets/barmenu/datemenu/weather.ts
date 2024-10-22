@@ -1,5 +1,7 @@
 import Interactable from '@components/interactable';
+import { timeof } from '@services/calendar';
 import { WeatherService, type CurrentWeather } from '@services/weather';
+import { Align, Justification } from 'types/@girs/gtk-3.0/gtk-3.0.cjs';
 
 const IconMap: Record<string, string> = {
 	'clear-day': 'sun-outline',
@@ -15,22 +17,103 @@ const IconMap: Record<string, string> = {
 	'hail': 'storm-outline',
 };
 
-const Weather = (w: CurrentWeather | undefined) => {
-	if (!w) return Widget.Label({
-		label: '...',
-		class_name: 'Joe',
-	});
+const Header = (weather: CurrentWeather) => Widget.CenterBox({
+	class_name: 'Header',
+	start_widget: Widget.Icon({
+		icon: IconMap[weather.now.icon],
+		size: 32,
+		xalign: 0,
+	}),
+	end_widget: Widget.Box({
+		vertical: true,
+		children: [
+			Widget.Label({
+				label: weather.place,
+				class_name: 'Place',
+				justify: Justification.RIGHT,
+				xalign: 1,
+			}),
+			Widget.Label({
+				label: weather.now.summary,
+				class_name: 'Summary',
+				justify: Justification.RIGHT,
+				xalign: 1,
+			}),
+		],
+	}),
+});
 
-	return Widget.Icon({
-		icon: IconMap[w.icon] || 'sun-outline',
-		class_name: 'Weather',
-	});
-};
+const Temperatures = (weather: CurrentWeather) => Widget.Box({
+	class_name: 'Temperatures',
+	vertical: true,
+	children: [
+		Widget.Label({
+			label: `${weather.now.temperature.actual}°`,
+			halign: Align.START,
+			class_name: 'Temperature',
+		}),
+		Widget.Box({
+			class_name: 'HiLo',
+			halign: Align.START,
+			spacing: 4,
+			children: [
+				Widget.Label({
+					label: `${weather.daily[0].temperature.max}°`,
+					class_name: 'High',
+				}),
+				Widget.Label({
+					label: `${weather.daily[0].temperature.min}°`,
+					class_name: 'Low',
+				}),
+			],
+		}),
+	],
+});
+
+const Hourly = (weather: CurrentWeather) => Widget.Box({
+	class_name: 'Hourly',
+	halign: Align.END,
+	valign: Align.END,
+	spacing: 18,
+	children: weather.hourly
+		.filter((_, i) => i != 0 && i % 2 == 0)
+		.filter((_, i) => i < 3)
+		.map(hour => Widget.Box({
+			class_name: 'Hour',
+			vertical: true,
+			children: [
+				Widget.Label({
+					label: `${hour.temperature.actual}°`,
+					class_name: 'Temperature',
+				}),
+				Widget.Icon({
+					icon: IconMap[hour.icon],
+					size: 24,
+				}),
+				Widget.Label({
+					label: timeof(hour.time),
+					class_name: 'Time',
+				}),
+			],
+		})),
+});
 
 export default () => Interactable({
 	child: Widget.Box({
-		class_name: 'WeatherBox',
+		class_name: 'Weather Card',
 		vertical: true,
-		children: WeatherService.bind('weather').transform(w => [Weather(w)]),
+		children: WeatherService.bind('weather').transform((w) => {
+			if (!w) return [];
+			else return [
+				Header(w),
+				Widget.CenterBox({
+					start_widget: Temperatures(w),
+					end_widget: Hourly(w),
+				}),
+			];
+		}),
 	}),
+	on_primary_click_release: () => {
+		Utils.execAsync('gnome-weather').catch(console.error);
+	},
 });

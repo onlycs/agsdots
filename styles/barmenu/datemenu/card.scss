@@ -1,0 +1,14 @@
+.Card {
+	@include Button($Layer1);
+
+	margin-top: 1rem;
+	border-radius: 0.5rem;
+	padding: 1rem;
+
+	.Label {
+		font-size: 1.1rem;
+		font-weight: 600;
+		color: lighten($TextDark, 15%);
+		margin-bottom: 0.5rem;
+	}
+}
