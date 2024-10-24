@@ -1,5 +1,6 @@
 import Button from '@components/button';
 import Interactable from '@components/interactable';
+import type { Option } from '@result';
 import { type CalendarResponse, type CalendarWeek, CalendarService, filter_id } from '@services/calendar';
 
 const Header = () => Widget.CenterBox({
@@ -50,7 +51,7 @@ const WeekLabels = () => Widget.Box({
 
 const ZeroPadded = (day: number) => day.toString().padStart(2, '0');
 
-const Week = (week: CalendarWeek, gcal: CalendarResponse | undefined) => Widget.Box({
+const Week = (week: CalendarWeek, gcal: Option<CalendarResponse>) => Widget.Box({
 	class_name: 'Week',
 	halign: 3,
 	children: week.days.map(day => Interactable({
@@ -66,7 +67,7 @@ const Week = (week: CalendarWeek, gcal: CalendarResponse | undefined) => Widget.
 					class_name: 'Label',
 				}),
 				Widget.Label({
-					label: '•'.repeat(Math.min(Object.values(gcal?.events ?? {}).flatMap(n => n.items ?? []).filter(filter_id(day.id)).length, 3)),
+					label: '•'.repeat(Math.min(Object.values(gcal.map(c => c.events).unwrap_or({})).flatMap(n => n.items ?? []).filter(filter_id(day.id)).length, 3)),
 					class_name: 'Bullet',
 				}),
 			],
@@ -77,7 +78,7 @@ const Week = (week: CalendarWeek, gcal: CalendarResponse | undefined) => Widget.
 const Calendar = () => Widget.Box({
 	vertical: true,
 	class_name: 'Weeks',
-	children: CalendarService.bindkeys('weeks', 'gcal').transform(data => [WeekLabels(), ...data.weeks.map(week => Week(week, data.gcal))]),
+	children: CalendarService.bindkeys('weeks', 'gcal').transform(data => [WeekLabels(), ...data.weeks.map(week => Week(week, data.gcal.into_option().flatten<CalendarResponse>()))]),
 });
 
 export default () => Widget.Box({

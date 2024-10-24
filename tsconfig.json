@@ -48,6 +48,12 @@
 			"@prelude": [
 				"./src/prelude"
 			],
+			"@result": [
+				"./src/error/result",
+			],
+			"@error/*": [
+				"./src/error/*"
+			],
 			"types/*": [
 				"./types/*"
 			]

@@ -1,4 +1,6 @@
+import { Option, Result } from '@result';
 import type { CurrentWeather } from '../../src-weather/types';
+import { ExecError } from '@error/exec';
 export type { CurrentWeather } from '../../src-weather/types';
 
 class Weather extends Service {
@@ -12,7 +14,7 @@ class Weather extends Service {
 		);
 	}
 
-	#weather_val: CurrentWeather | undefined = undefined;
+	#weather_val: Result<Option<CurrentWeather>, ExecError> = Result.ok(Option.none());
 
 	constructor() {
 		super();
@@ -28,10 +30,12 @@ class Weather extends Service {
 
 	#update() {
 		const command = `nu -c 'cd ${App.configDir}; bun run --silent weather'`;
+
 		Utils.execAsync(command)
 			.then(JSON.parse)
-			.then((output: CurrentWeather) => {
-				this.#weather_val = {
+			.ext(ExecError.convert)
+			.then_ok((output: CurrentWeather) => {
+				this.#weather_val = Result.ok(Option.some({
 					...output,
 					hourly: output.hourly.map((hour) => {
 						return {
@@ -45,14 +49,17 @@ class Weather extends Service {
 							time: new Date(day.time),
 						};
 					}),
-				};
-				this.notify('weather');
+				}));
 			})
-			.catch(console.error);
+			.catch_result((err) => {
+				this.#weather_val = Result.err(err);
+			}, undefined, () => {
+				this.notify('weather');
+			});
 	}
 
 	force_update() {
-		this.#weather_val = undefined;
+		this.#weather_val = Result.ok(Option.none());
 		this.notify('weather');
 		this.#update();
 	}

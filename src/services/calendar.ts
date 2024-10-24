@@ -1,7 +1,10 @@
 import type { calendar_v3 } from 'googleapis';
 import type { CalendarKey, CalendarResponse } from '../../src-gcal/types.ts';
 import type { Binding } from 'resource:///com/github/Aylur/ags/service.js';
-export type { CalendarResponse } from '../../src-gcal/types.ts';
+import '@error/promise-ext';
+import { ExecError } from '@error/exec';
+import { Result } from '@result';
+import { Option } from '@result';
 
 export const Months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
 
@@ -203,7 +206,7 @@ export interface CalendarServiceData {
 	selected: string;
 	weeks: CalendarWeek[];
 	header: string;
-	gcal: CalendarResponse | undefined;
+	gcal: Result<Option<CalendarResponse>, ExecError>;
 }
 
 class CalService extends Service {
@@ -221,6 +224,7 @@ class CalService extends Service {
 	#year = 0;
 	#selected = today_id();
 	#google = new GoogleCalendarManager();
+	#error: Option<ExecError> = Option.none();
 
 	constructor() {
 		super();
@@ -236,14 +240,18 @@ class CalService extends Service {
 			if (this.#year == new Date().getFullYear()) return Months[this.#month];
 			else return `${Months[this.#month]} ${this.#year}`;
 		};
+
 		return {
 			selected: this.#selected,
 			weeks: generate_month(this.#month, this.#year, this.#selected),
 			header: header(),
-			gcal: this.#google.get({
-				month: this.#month,
-				year: this.#year,
-			}),
+			gcal: this.#error.handle_both(
+				Result.err<Option<CalendarResponse>, ExecError>,
+				() => Result.ok(Option.of(this.#google.get({
+					month: this.#month,
+					year: this.#year,
+				}))),
+			),
 		};
 	}
 
@@ -259,24 +267,37 @@ class CalService extends Service {
 		this.notify('data');
 	}
 
+	#notify_err(e: ExecError) {
+		this.#error = Option.some(e);
+		this.#notify();
+	}
+
+	#clear_err() {
+		this.#error = Option.none();
+	}
+
 	#fetch_gcal() {
 		const date = id_to_date(this.#selected);
 
 		this.#google.remove(date_to_key(date));
 		this.#notify();
+		this.#clear_err();
 
 		const command = `nu -c 'cd ${App.configDir}; echo "${id_to_date(this.#selected).toISOString()}" | bun run --silent gcal'`;
 
 		Utils.execAsync(command)
 			.then(JSON.parse)
-			.then((output: CalendarResponse) => {
+			.ext(ExecError.convert)
+			.then_ok((output) => {
 				this.#google.register({
 					...output,
 					generated: new Date(output.generated),
 				});
 				this.#notify();
 			})
-			.catch(console.error);
+			.catch_result((e) => {
+				this.#notify_err(e);
+			});
 	}
 
 	#update_gcal() {
@@ -345,3 +366,4 @@ class CalService extends Service {
 }
 
 export const CalendarService = new CalService();
+export type { CalendarResponse } from '../../src-gcal/types.ts';

@@ -37,11 +37,18 @@
 	}
 
 	.Hourly {
-
 		.Hour {
 			.Temperature {
 				margin-left: 0.1rem;
 			}
 		}
+	}
+
+	.Error {
+		color: darken($Text, 5%);
+		font-size: 1.05rem;
+		font-weight: 600;
+		margin-top: 1rem;
+		margin-bottom: 1rem;
 	}
 }

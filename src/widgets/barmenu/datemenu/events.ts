@@ -37,7 +37,7 @@ const DayText = () => Widget.Label({
 	xalign: 0,
 });
 
-const Events = (cal: CalendarResponse) => {
+const Events = (cal: CalendarResponse): Gtk.Widget[] => {
 	const calendars = cal.events;
 	const events: Array<calendar_v3.Schema$Event & { color: string }> = [];
 	const today = id_to_date(CalendarService.data.selected);
@@ -149,7 +149,15 @@ export default () => Interactable({
 		spacing: 4,
 		children: CalendarService.bindkey('gcal').transform(cal => [
 			DayText(),
-			...(cal ? Events(cal) : [Widget.Spinner()] as Gtk.Widget[]),
+			...(() => {
+				return cal.handle_both(
+					res => res.handle_both<Gtk.Widget[]>(
+						Events,
+						() => [Widget.Spinner()] as Gtk.Widget[],
+					),
+					_ => [Widget.Label({ label: 'Error fetching events', class_name: 'NoEvents' })],
+				);
+			})(),
 		]),
 	}),
 	on_primary_click_release: () => {

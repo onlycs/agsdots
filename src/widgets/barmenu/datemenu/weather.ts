@@ -105,14 +105,19 @@ export default () => Interactable({
 		class_name: 'Weather Card',
 		vertical: true,
 		children: WeatherService.bind('weather').transform((w) => {
-			if (!w) return [Widget.Spinner()] as Gtk.Widget[];
-			else return [
-				Header(w),
-				Widget.CenterBox({
-					start_widget: Temperatures(w),
-					end_widget: Hourly(w),
-				}),
-			];
+			return w.handle_both(
+				ok => ok.handle_both(
+					res => [
+						Header(res),
+						Widget.CenterBox({
+							start_widget: Temperatures(res),
+							end_widget: Hourly(res),
+						}),
+					] as Gtk.Widget[],
+					() => [Widget.Spinner()] as Gtk.Widget[],
+				),
+				_ => [Widget.Label({ label: 'Error fetching weather', class_name: 'Error' })],
+			) as Gtk.Widget[];
 		}),
 	}),
 	on_primary_click_release: () => {
